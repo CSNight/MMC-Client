@@ -5,10 +5,10 @@ define(function (require) {
     var options = require('options');
     var base_map = require('base_map');
     var control = require('control');
-    var layerOptions=options.GridOptions();
-    var init = function () {
+    var layerOptions = options.GridOptions();
+    var init = function (map, liveRenderer, liveDataSet, geoFenceLayer) {
         base_map.init(options.map_url);
-        timeControl=control.initTimeControlView(loadLiveData, options);
+        timeControl = control.initTimeControlView(loadLiveData, options);
         control.initToggleThemeView(base_map.handle_event);
         liveESService = new SuperMap.ElasticSearch(options.data_url);
         var buttons = $('.btn-group').children();
@@ -120,10 +120,12 @@ define(function (require) {
             renderLive(response.aggregations.zoomedInView.geohash.buckets);
         });
     }
+
     //更新当前时间界面
     function updateProgress(currentTime) {
         $("#progress").html(currentTime);
     }
+
 //渲染实时点数据
     function renderLive(result) {
         if (timeControl && !timeControl.getRunning()) {

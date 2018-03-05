@@ -26,14 +26,12 @@
 <div id="map" style="margin:0 auto;width: 100%;height: 100%;border: 1px solid #dddddd"></div>
 
 <script type="text/javascript">
-    var map, liveRenderer,
-        liveDataSet,
-        geoFenceLayer;
+    var map, liveRenderer, liveDataSet, geoFenceLayer;
     require.config({
-        baseUrl:'js'
+        baseUrl: 'js/busi-libs'
     });
-    require(['es_flight'],function(es_flight){
-        es_flight.initjs();
+    require(['es_flight'], function (es_flight) {
+        es_flight.initjs(map, liveRenderer, liveDataSet, geoFenceLayer);
     });
 </script>
 </body>

@@ -2,18 +2,15 @@
     var r = new RegExp("(^|(.*?\\/))(include-3rdlibs\.js)(\\?|$)"), s = document
         .getElementsByTagName('script'), src, m, targetScript;
     for (var i = 0; i < s.length; i++) {
-        src, m, targetScript = "";
-        for (var i = 0, len = s.length; i < len; i++) {
             src = s[i].getAttribute('src');
             if (src) {
-                var m = src.match(r);
+                m = src.match(r);
                 if (m) {
                     relativePath = m[1] || "./";
                     targetScript = s[i];
                     break;
                 }
             }
-        }
     }
 
     function inputScript(inc) {

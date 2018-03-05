@@ -15,7 +15,7 @@
             iconSize: [12,12],
             color: 'red',
             animate: true,
-            heartbeat: 1,
+            heartbeat: 1
         },
 
         initialize: function (options) {
@@ -32,7 +32,7 @@
 
                 'animation: pulsate ' + this.options.heartbeat + 's ease-out',
                 'animation-iteration-count: infinite',
-                'animation-delay: '+ (this.options.heartbeat + .1) + 's',
+                'animation-delay: '+ (this.options.heartbeat + .1) + 's'
             ];
 
             if (!this.options.animate){
@@ -42,7 +42,7 @@
 
             var css = [
                 '.'+uniqueClassName+'{'+before.join(';')+';}',
-                '.'+uniqueClassName+':after{'+after.join(';')+';}',
+                '.'+uniqueClassName+':after{'+after.join(';')+';}'
             ].join('');
  
             var el = document.createElement('style');

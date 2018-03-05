@@ -6,8 +6,8 @@
     <script type="text/javascript" include="moment,bootstrap,geohash,mapv,elasticsearch"
             src="js/third-js-libs/include-3rdlibs.js"></script>
     <script type="text/javascript" src="js/supermap-libs/iclient9-leaflet.js"></script>
-    <link ref="stylesheet" href="js/supermap-libs/iclient9-leaflet.css"/>
-    <script type="text/javascript" src="js/js.js"></script>
+    <link rel="stylesheet" href="js/supermap-libs/iclient9-leaflet.css"/>
+    <script type="text/javascript" src="js/base-libs/require.js"></script>
     <style>
         .bootstrap-select {
             width: 168px !important;
@@ -22,9 +22,20 @@
         }
     </style>
 </head>
-<body style=" margin: 0;overflow: hidden;background: #fff;width: 100%;height:100%;position: absolute;top: 0;" onload="init()">
+<body style=" margin: 0;overflow: hidden;background: #fff;width: 100%;height:100%;position: absolute;top: 0;">
 <div id="map" style="margin:0 auto;width: 100%;height: 100%;border: 1px solid #dddddd"></div>
 
+<script type="text/javascript">
+    var map, liveRenderer,
+        liveDataSet,
+        geoFenceLayer;
+    require.config({
+        baseUrl:'js'
+    });
+    require(['es_flight'],function(es_flight){
+        es_flight.initjs();
+    });
+</script>
 </body>
 </html>
 

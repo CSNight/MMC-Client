@@ -129,7 +129,6 @@
 
 .sticklr > li:last-child {
     border-bottom: 1px solid #f7f7f7;
-    border-bottom: 0px;
 }
 
 .sticklr > li > input:hover {
@@ -226,8 +225,8 @@
 
 .sticklr > li > ul > li:first-child {
     border-top: 1px solid #f7f7f7;
-    padding:0px;
-    margin: 0px;
+    padding:0;
+    margin: 0;
 }
 
 .sticklr > li > ul > li:last-child {

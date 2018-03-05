@@ -13,7 +13,6 @@ define(function () {
     };
     //初始化时间控制控件，仅UI
     var initTimeControlView = function (loadLiveData, options_module) {
-        var timeControl = null;
         var control = L.control({position: "topright"});
         control.onAdd = function () {
             var me = this;

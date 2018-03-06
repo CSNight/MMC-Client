@@ -1,130 +1,53 @@
-define(function () {
-    var initToggleThemeView = function (handle_event) {
-        var info = L.control({position: 'bottomleft'});
-        info.onAdd = function () {
-            var popup = L.DomUtil.create('div');
-            popup.innerHTML = "<div class='btn-group' role='group' aria-label='...'>" +
-                "<button  value='grid' type='button' class='btn btn-default'>格网图</button>" +
-                "<button value='heatmap' type='button' class='btn btn-default'>热力图</button></div>";
-            handle_event(popup, map);
-            return popup;
-        };
-        info.addTo(map);
-    };
-    //初始化时间控制控件，仅UI
-    var initTimeControlView = function (loadLiveData, options_module) {
-        var control = L.control({position: "topright"});
-        control.onAdd = function () {
-            var me = this;
-            me._div = L.DomUtil.create('div', 'panel panel-primary controlPane');
-            me._div.style.width = "300px";
-            $("<div class='panel-heading text-center' id='toggle' style='cursor: pointer'>" +
-                "<span class='panel-title text-center'>控制台</span>&nbsp;" +
-                "<span class='glyphicon glyphicon-triangle-top' id='toggleIcon' ></span></div>").appendTo(me._div);
-            var contentDiv = $("<div class='panel-body content center-block' style='font-size: 14px'></div>").appendTo(me._div);
-            var optionsDiv = $("<div class='' id='options'></div>").appendTo(contentDiv);
-            var defaultOption = options_module.DefaultControlOptions();
-            $("<div class='form-group form-inline'><label class='text-right' for='startTime' >起始时间</label>" +
-                "<input id='startTime' type='text' class='form-control.js input-sm' placeholder='" + defaultOption.startTime +
-                "' value='" + defaultOption.startTime + "'/></div></div>").appendTo(optionsDiv);
-            $("<div class='form-group form-inline'><label class='text-right' for='endTime' >终止时间</label>" +
-                "<input id='endTime' type='text' class='form-control.js input-sm' placeholder='" + defaultOption.endTime +
-                "' value='" + defaultOption.endTime + "'/></div></div>").appendTo(optionsDiv);
-            $("<div class='form-group form-inline'><label class='text-right' for='speed' >刷新步长(ms)</label>" +
-                "<input id='speed' type='number' min='1' class='form-control.js input-sm' placeholder='" + defaultOption.speed +
-                "' value='" + defaultOption.speed + "'/></div></div>").appendTo(optionsDiv);
-            $("<div class='form-group form-inline'><label class='text-right' for='frequency' >刷新频率(ms)</label>" +
-                "<input id='frequency' type='number' min='1' class='form-control.js input-sm' placeholder='" + defaultOption.frequency +
-                "' value='" + defaultOption.frequency + "'/></div></div>").appendTo(optionsDiv);
-            $("<div class='form-group'><div class='form-horizontal text-center'><div class='form-group'>" +
-                "<label  for='progress'>当前时间：</label><span class='form-control.js-static' id='progress'>未开始</span>" +
-                "</div></div></div>").appendTo(contentDiv);
-            $("<section><div class='form-inline text-center'>" +
-                "<input id='start' type='button'  class='btn btn-default text-center' value='开始'/>&nbsp;" +
-                "<input id='pause' type='button'  class='btn btn-default text-center' value='暂停'/>&nbsp;" +
-                "<input id='stop' type='button'  class='btn btn-default text-center' value='停止'/>" +
-                "</div></section>").appendTo(contentDiv);
-            me._div.addEventListener('mouseover', function () {
-                me._map.dragging.disable();
-                me._map.scrollWheelZoom.disable();
-                me._map.doubleClickZoom.disable();
-            });
-            me._div.addEventListener('mouseout', function () {
-                me._map.dragging.enable();
-                me._map.scrollWheelZoom.enable();
-                me._map.doubleClickZoom.enable();
-            });
-            return me._div;
-        };
-        control.addTo(map);
-        var dateOptions = {
-            format: "YYYY-MM-DD HH:mm:ss",
-            stepping: 1,
-            showClose: true,
-            locale: 'zh-cn'
-        };
-        $("#startTime").datetimepicker(dateOptions);
-        $("#endTime").datetimepicker(dateOptions);
-        $("#start").on('click', function () {
-            $("#options").slideUp("fast", function () {
-                toggle(this);
-            });
-            start(options_module);
+define(function (require) {
+
+    var options = require('options');
+    var base_map = require('base_map');
+    var plugins = require('plugins');
+    var layerOptions = options.GridOptions();
+    var es_options = null;
+    var init = function (map, liveRenderer, liveDataSet, callbackOptions) {
+        es_options = callbackOptions;
+        options.setDefaultControlOptions(es_options);
+        base_map.init(options.map_url);
+        plugins.initTimeControlView(loadLiveData, options);
+        plugins.initToggleThemeView(base_map.handle_event);
+        var buttons = $('.btn-group').children();
+        buttons.map(function (key) {
+            var value = buttons[key].value;
+            if (value === 'grid') {
+                $(buttons[key]).on('click', function () {
+                    layerOptions = options.GridOptions();
+                    if (liveDataSet) {
+                        liveRenderer.update({data: liveDataSet, options: layerOptions});
+                    }
+                });
+                return;
+            }
+            if (value === 'heatmap') {
+                $(buttons[key]).on('click', function () {
+                    layerOptions = options.HeatMapOptions();
+                    if (liveDataSet) {
+                        liveRenderer.update({data: liveDataSet, options: layerOptions});
+                    }
+                });
+            }
         });
-        $("#pause").on('click', pause);
-        $("#stop").on('click', stop);
-        $("#toggle").on('click', function () {
-            $("#options").slideToggle("fast", function () {
-                toggle(this);
-            });
-            return false;
-        });
-
-        function toggle(ele) {
-            if ($(ele).is(":visible")) {
-                $("#toggleIcon").attr('class', "glyphicon glyphicon-triangle-top");
-            } else {
-                $("#toggleIcon").attr('class', "glyphicon glyphicon-triangle-bottom");
-            }
-        }
-
-        function start(options_module) {
-            var options = options_module.ControlOptions();
-            if (!timeControl) {
-                timeControl = new SuperMap.TimeFlowControl(loadLiveData, options);
-            } else {
-                timeControl.updateOptions(options);
-            }
-            timeControl.start();
-        }
-
-        function pause() {
-            timeControl.pause();
-        }
-
-        //停止播放
-        function stop() {
-            timeControl.stop();
-            if (timeControl) {
-                timeControl.destroy();
-                timeControl = null;
-            }
-            if (liveRenderer) {
-                map.removeLayer(liveRenderer);
-                liveRenderer = null;
-            }
-            if (liveDataSet) {
-                liveDataSet = null;
-            }
-            if (geoFenceLayer) {
-                geoFenceLayer.remove();
-                geoFenceLayer = null;
-            }
-        }
-        return timeControl;
     };
+
+    //时间控制器回调参数，即每次刷新时执行的操作，此处为向服务器请求数据并绘制。实时刷新执行。
+    function loadLiveData(currentTime) {
+        var es_request = require('es_request');
+        var search_body = es_request.request_build(map.getZoom(), map.getBounds(), currentTime, currentTime + options.ControlOptions().speed, es_options);
+        es_request.request_handle(options.data_url, search_body, timeControl, layerOptions);
+        updateProgress(moment(currentTime).format("YYYY-MM-DD HH:mm:ss"));
+    }
+
+    //更新当前时间界面
+    function updateProgress(currentTime) {
+        $("#progress").html(currentTime);
+    }
+
     return {
-        initToggleThemeView: initToggleThemeView,
-        initTimeControlView: initTimeControlView
+        initjs: init
     };
 });

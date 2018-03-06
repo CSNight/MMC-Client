@@ -30,8 +30,28 @@
     require.config({
         baseUrl: 'js/busi-libs'
     });
-    require(['flight'], function (flight) {
-        flight.initjs(map, liveRenderer, liveDataSet, timeControl);
+    require(['control'], function (control) {
+        var flights_options = {
+            index: "flights",
+            es_type: "flight_utc",
+            range_field: "time-ms",
+            geo_field: "location",
+            start: 1498772645774,
+            end: 1498935332879,
+            speed: 900000,
+            frequency: 1000
+        };
+        var shippos_options = {
+            index: "shippos",
+            es_type: "shippos",
+            range_field: "pos_time",
+            geo_field: "pin.location",
+            start: 1498772645774,
+            end: 1498935332879,
+            speed: 900000,
+            frequency: 1000
+        };
+        control.initjs(map, liveRenderer, liveDataSet, shippos_options);
     });
 </script>
 </body>

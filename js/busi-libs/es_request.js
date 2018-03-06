@@ -1,5 +1,5 @@
-define(function (require) {
-    var building_es_request = function (level, extent, startT, endT, index, es_type, range_field, geo_field) {
+define(function () {
+    var building_es_request = function (level, extent, startT, endT, es_options) {
         if (startT > endT) {
             return;
         }
@@ -20,27 +20,27 @@ define(function (require) {
             prec = 12;
         }
         return {
-            index: index,
-            type: es_type,
+            index: es_options.index,
+            type: es_options.es_type,
             body: {
                 query: {
                     constant_score: {
                         filter: {
-                            range: eval("(" + "{'" + range_field + "': {from: " + startT + ",to:" + endT + "}}" + ")")
+                            range: eval("(" + "{'" + es_options.range_field + "': {from: " + startT + ",to:" + endT + "}}" + ")")
                         }
                     }
                 },
                 aggregations: {
                     zoomedInView: {
                         filter: {
-                            geo_bounding_box: eval("(" + "{" + geo_field + ":{top_left: {lat:" + coords.getNorthWest().lat + ", lon:" +
+                            geo_bounding_box: eval("(" + "{'" + es_options.geo_field + "':{top_left: {lat:" + coords.getNorthWest().lat + ", lon:" +
                                 coords.getNorthWest().lng + "},bottom_right: {lat: " + coords.getSouthEast().lat + ",lon:" + coords.getSouthEast().lng +
                                 "}}}" + ")")
                         },
                         aggregations: {
                             geohash: {
                                 geohash_grid: {
-                                    field: geo_field,
+                                    field: es_options.geo_field,
                                     precision: prec
                                 }
                             }

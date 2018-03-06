@@ -1,6 +1,12 @@
 define(function () {
     var map_url = "http://support.supermap.com.cn:8090/iserver/services/map-china400/rest/maps/ChinaDark";
     var data_Url = "http://127.0.0.1:9200";
+    var time_option = {
+        startTime: moment(1498772645774).format("YYYY-MM-DD HH:mm:ss"),
+        endTime: moment(1498935332879).format("YYYY-MM-DD HH:mm:ss"),
+        speed: 900000,
+        frequency: 1000
+    };
     var getGridOptions = function () {
         return {
             fillStyle: 'rgba(55, 50, 250, 0.8)',
@@ -49,15 +55,18 @@ define(function () {
         }
     };
     var getDefaultControlOptions = function () {
-        var startMs = 1498772645774;
-        var endMs = 1498935332879;
+        return time_option;
+    };
+    var setDefaultControlOptions = function (option) {
+        var startMs = option.start;
+        var endMs = option.end;
         var start = moment(startMs).format("YYYY-MM-DD HH:mm:ss");
         var end = moment(endMs).format("YYYY-MM-DD HH:mm:ss");
-        return {
+        time_option = {
             startTime: start,
             endTime: end,
-            speed: 900000,
-            frequency: 1000
+            speed: option.speed,
+            frequency: option.frequency
         }
     };
     //获取时间控件设置的参数
@@ -85,7 +94,8 @@ define(function () {
         GridOptions: getGridOptions,
         HeatMapOptions: getHeatMapOptions,
         DefaultControlOptions: getDefaultControlOptions,
-        ControlOptions: getControlOptions
+        ControlOptions: getControlOptions,
+        setDefaultControlOptions: setDefaultControlOptions
     }
 });
 

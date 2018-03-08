@@ -117,7 +117,6 @@ define(function () {
                 liveDataSet = null;
             }
         }
-        return timeControl;
     };
     return {
         initToggleThemeView: initToggleThemeView,

@@ -51,7 +51,6 @@ define(function () {
         };
     };
 
-    //eval("("+"{"+range_field+": {from: "+startT+",to:"+ endT+"}}"+")")
     var es_request_func = function (url, search_body, timecontrol, options) {
         var liveESService = new SuperMap.ElasticSearch(url);
         liveESService.search(search_body).then(function (response) {

@@ -1,16 +1,16 @@
 var widgets = {
-    loader:{
+    loader: {
         //显示loading
-        showLoader:null,
+        showLoader: null,
         //设置loading文本，默认文本为'loading'
-        setLoaderText:null,
+        setLoaderText: null,
         //设置loader显示相关属性
-        setAttributes:null,
+        setAttributes: null,
         //移除掉loader
-        removeLoader:null
+        removeLoader: null
     },
 
-    alert:{
+    alert: {
         //弹出自定义弹框
         showAlert: null,
         //clear alert
@@ -44,8 +44,7 @@ var widgets = {
             $(alertDiv).remove();
         }
         if (!$('#msg_container')[0]) {
-            alertDiv = $(`<div class='alert alert-dismissible' id='msg_container' role='alert'
-        style='z-index:999999;position: absolute;top: 20px;left: 40%; display: none;text-align: center'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true' >&times;</span></button><strong><p id='msg' style='word-wrap: break-word'></p></strong></div>`);
+            alertDiv = $("<div class='alert alert-dismissible' id='msg_container' role='alert' style='z-index:999999;position: absolute;top: 20px;left: 40%; display: none;text-align: center'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true' >&times;</span></button><strong><p id='msg' style='word-wrap: break-word'></p></strong></div>");
             $('body').append(alertDiv)
         }
         $('#msg_container').css('width', width + 'px');
@@ -137,7 +136,7 @@ var widgets = {
 
     widgets.loader.showLoader = showLoader;
     widgets.loader.setLoaderText = setLoaderText;
-    widgets.loader.setAttributes=setAttributes;
+    widgets.loader.setAttributes = setAttributes;
     widgets.loader.removeLoader = removeLoader;
 
 })(widgets, window.jQuery);

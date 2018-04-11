@@ -73,7 +73,7 @@ function RestQueryAjax(callback) {
 						textStatus));
 			}
 		});
-	}
+	};
 
 	// GET-Ajax
 	var ResultGet = function getQuery(data, f, restin, method) {
@@ -103,5 +103,5 @@ function RestQueryAjax(callback) {
 						textStatus));
 			}
 		});
-	}
+	};
 }

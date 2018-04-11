@@ -35,7 +35,7 @@
                     inputScript('turf/turf.min.js');
                     break;
                 case 'echarts':
-                    inputScript('echart/echarts.js');
+                    inputScript('echart/echarts.min.js');
                     break;
                 case 'd3':
                     inputScript('d3/d3.min.js');

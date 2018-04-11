@@ -29,7 +29,7 @@
         for (var index in arr) {
             switch (arr[index]) {
                 case 'mapv':
-                    inputScript('map-v/mapv.min.js');
+                    inputScript('mapv/mapv.min.js');
                     break;
                 case 'turf':
                     inputScript('turf/turf.min.js');

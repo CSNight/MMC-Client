@@ -116,6 +116,8 @@
                     inputCSS("metro/css/metro-icons.css");
                     inputCSS("metro/css/metro-responsive.css");
                     break;
+                case "font-awesome":
+                    inputCSS("font-awesome/font-awesome.min.css");
             }
         }
     }

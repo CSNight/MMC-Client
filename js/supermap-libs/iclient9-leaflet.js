@@ -6175,9 +6175,9 @@ var GeoJSON = exports.GeoJSON = function (_JSONFormat) {
                 case _REST.GeometryType.POINTEPS:
                     return me.toGeoPoint(geometry);
                 // case GeometryType.LINEEPS:
-                //     return me.toGeoLineEPS();
+                //     return metro.toGeoLineEPS();
                 // case GeometryType.REGIONEPS:
-                //     return me.toGeoRegionEPS();
+                //     return metro.toGeoRegionEPS();
                 default:
                     return geometry;
             }
@@ -8351,7 +8351,7 @@ var Bounds = exports.Bounds = function () {
                 var inRight = bounds.right >= self.left && bounds.right <= self.right || self.right >= bounds.left && self.right <= bounds.right;
                 intersects = (inBottom || inTop) && (inLeft || inRight);
             }
-            // document me
+            // document metro
             if (options.worldBounds && !intersects) {
                 var world = options.worldBounds;
                 var width = world.getWidth();
@@ -12961,10 +12961,10 @@ var GetFeaturesServiceBase = exports.GetFeaturesServiceBase = function (_CommonS
 
         end = me.url.substr(me.url.length - 1, 1);
         // TODO 待iServer featureResul资源GeoJSON表述bug修复当使用以下注释掉的逻辑
-        // if (me.format==="geojson" ) {
-        //     me.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
+        // if (metro.format==="geojson" ) {
+        //     metro.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
         // } else {
-        //     me.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
+        //     metro.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
         // }
         me.url += end == "/" ? "featureResults.json?" : "/featureResults.json?";
 
@@ -14265,9 +14265,9 @@ var QueryService = exports.QueryService = function (_CommonServiceBase) {
 
         // TODO 待iServer featureResul资源GeoJSON表述bug修复当使用以下注释掉的逻辑
         // if (this.format==="geojson") {
-        //     me.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
+        //     metro.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
         // } else {
-        //     me.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
+        //     metro.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
         // }
         me.url += end === "/" ? "queryResults.json?" : "/queryResults.json?";
         return _this;
@@ -28355,7 +28355,7 @@ var TiledMapLayer = exports.TiledMapLayer = _leaflet2["default"].TileLayer.exten
         //切片版本集信息是否存在
         if (me.tileSets == null) {
             //版本信息为空，重新查询，查询成功继续跳转到相应的版本
-            //me.getTileSetsInfo();
+            //metro.getTileSetsInfo();
             return;
         }
         if (me.tempIndex === me.tileSetsIndex || this.tempIndex < 0) {
@@ -50631,8 +50631,8 @@ var Handler = exports.Handler = function (_Eventful) {
                     if (shape.isHoverByRefDataID && shape.isHoverByRefDataID === true) {
                         if (shape.refDataID) {
                             var fid = shape.refDataID;
-                            //me.painter.clearHover();
-                            //me.storage.delHover();
+                            //metro.painter.clearHover();
+                            //metro.storage.delHover();
 
                             var hoverGroup = null;
                             if (shape.refDataHoverGroup) {
@@ -50658,7 +50658,7 @@ var Handler = exports.Handler = function (_Eventful) {
                         me.storage.addHover(shape);
                     }
                     //初始代码：
-                    //  me.storage.addHover(shape);
+                    //  metro.storage.addHover(shape);
                     // SMIC-修改 - end
                 }
                 // 查找是否在 clipShape 中
@@ -55684,15 +55684,15 @@ var ThemeLayer = exports.ThemeLayer = _leaflet2["default"].Layer.extend({
         _leaflet2["default"].DomUtil.setPosition(this.container, mapOffset);
 
         var me = this;
-        //  var bounds = me._map.getBounds();
-        //  var topLeft = me._map.latLngToLayerPoint(bounds.getNorthWest());
+        //  var bounds = metro._map.getBounds();
+        //  var topLeft = metro._map.latLngToLayerPoint(bounds.getNorthWest());
         //  var mapOffset = [parseInt(topLeft.x, 10) || 0, parseInt(topLeft.y, 10) || 0]
-        // // var offsetLeft = parseInt(me._map.getContainer().style.left, 10);
+        // // var offsetLeft = parseInt(metro._map.getContainer().style.left, 10);
         // // offsetLeft = -Math.round(offsetLeft);
-        //  //var offsetTop = parseInt(me._map.getContainer().style.top, 10);
+        //  //var offsetTop = parseInt(metro._map.getContainer().style.top, 10);
         //  //offsetTop = -Math.round(offsetTop);
-        //  me.container.style.left = mapOffset[0] + 'px';
-        //  me.container.style.top = mapOffset[1] + 'px';
+        //  metro.container.style.left = mapOffset[0] + 'px';
+        //  metro.container.style.top = mapOffset[1] + 'px';
 
         //绘制专题要素
         if (me.renderer) {
@@ -55852,15 +55852,15 @@ var ThemeLayer = exports.ThemeLayer = _leaflet2["default"].Layer.extend({
         var latLngBounds = me._map.getBounds();
         me.update(latLngBounds);
         var size = me._map.getSize();
-        // var bounds = me._map.getBounds();
-        // var topLeft = me._map.latLngToLayerPoint(bounds.getNorthWest());
+        // var bounds = metro._map.getBounds();
+        // var topLeft = metro._map.latLngToLayerPoint(bounds.getNorthWest());
         // var mapOffset = [parseInt(topLeft.x, 10) || 0, parseInt(topLeft.y, 10) || 0]
-        // var offsetLeft = parseInt(me._map.getContainer().style.left, 10);
+        // var offsetLeft = parseInt(metro._map.getContainer().style.left, 10);
         // offsetLeft = -Math.round(offsetLeft);
-        //var offsetTop = parseInt(me._map.getContainer().style.top, 10);
+        //var offsetTop = parseInt(metro._map.getContainer().style.top, 10);
         //offsetTop = -Math.round(offsetTop);
-        //me.container.style.left = mapOffset[0] + 'px';
-        //me.container.style.top = mapOffset[1] + 'px';
+        //metro.container.style.left = mapOffset[0] + 'px';
+        //metro.container.style.top = mapOffset[1] + 'px';
         var mapOffset = this._map.containerPointToLayerPoint([0, 0]);
         _leaflet2["default"].DomUtil.setPosition(this.container, mapOffset);
 
@@ -66265,10 +66265,10 @@ var ChartQueryService = exports.ChartQueryService = function (_CommonServiceBase
         end = me.url.substr(me.url.length - 1, 1);
 
         // TODO 待iServer featureResul资源GeoJSON表述bug修复当使用以下注释掉的逻辑
-        // if (me.format==="geojson") {
-        //     me.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
+        // if (metro.format==="geojson") {
+        //     metro.url += (end == "/") ? "featureResults.geojson?" : "/featureResults.geojson?";
         // } else {
-        //     me.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
+        //     metro.url += (end == "/") ? "featureResults.json?" : "/featureResults.json?";
         // }
         me.url += end === "/" ? "queryResults.json?" : "/queryResults.json?";
 
@@ -68301,7 +68301,7 @@ var FindMTSPPathsService = exports.FindMTSPPathsService = function (_NetworkAnal
             var me = this,
                 jsonObject,
 
-            //end = me.url.substr(me.url.length - 1, 1),
+            //end = metro.url.substr(metro.url.length - 1, 1),
             centers = me.getJson(params.isAnalyzeById, params.centers),
                 nodes = me.getJson(params.isAnalyzeById, params.nodes);
             me.url = me.url + "/mtsppath" + ".json?";

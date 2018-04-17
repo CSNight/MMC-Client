@@ -54861,7 +54861,7 @@ SeriesModel.extend({
 
 /**
  * @file defines echarts Heatmap Chart
- * @author Ovilia (me@zhangwenli.com)
+ * @author Ovilia (metro@zhangwenli.com)
  * Inspired by https://github.com/mourner/simpleheat
  *
  * @module

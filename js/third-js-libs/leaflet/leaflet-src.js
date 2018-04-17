@@ -5199,12 +5199,12 @@ var Layers = Control.extend({
 	},
 
 	_expand: function () {
-		// Backward compatibility, remove me in 1.1.
+		// Backward compatibility, remove metro in 1.1.
 		return this.expand();
 	},
 
 	_collapse: function () {
-		// Backward compatibility, remove me in 1.1.
+		// Backward compatibility, remove metro in 1.1.
 		return this.collapse();
 	}
 

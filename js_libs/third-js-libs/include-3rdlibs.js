@@ -2,15 +2,15 @@
     var r = new RegExp("(^|(.*?\\/))(include-3rdlibs\.js)(\\?|$)"), s = document
         .getElementsByTagName('script'), src, m, targetScript;
     for (var i = 0; i < s.length; i++) {
-            src = s[i].getAttribute('src');
-            if (src) {
-                m = src.match(r);
-                if (m) {
-                    relativePath = m[1] || "./";
-                    targetScript = s[i];
-                    break;
-                }
+        src = s[i].getAttribute('src');
+        if (src) {
+            m = src.match(r);
+            if (m) {
+                relativePath = m[1] || "./";
+                targetScript = s[i];
+                break;
             }
+        }
     }
 
     function inputScript(inc) {
@@ -88,6 +88,9 @@
                 case 'jq-scrollTo':
                     inputScript("jquery/jquery.scrollTo.min.js");
                     break;
+                case 'jq-dateTables':
+                    inputScript("jquery/jquery.dataTables.min.js");
+                    break;
                 case 'bootstrap':
                     inputScript("bootstrap/bootstrap.min.js");
                     inputCSS("bootstrap/css/bootstrap.min.css");
@@ -107,6 +110,12 @@
                     inputScript("common/randomColor.min.js");
                     inputCSS("bootstrap/css/bootstrap-datetimepicker.min.css");
                     break;
+                case "metro":
+                    inputScript("metro/js/metro.js");
+                    inputCSS("metro/css/metro.css");
+                    inputCSS("metro/css/metro-icons.css");
+                    inputCSS("metro/css/metro-responsive.css");
+                    break;
             }
         }
     }
@@ -114,10 +123,16 @@
     // 加载类库资源文件
     function load() {
         var includes = (targetScript.getAttribute('include') || "").split(",");
-        var excludes = (targetScript.getAttribute('exclude') || "").split(",");
-        inputScript("jquery/jquery.min.js");
-        inputCSS("leaflet/css/leaflet.css");
-        inputScript("leaflet/leaflet.js");
+        var excepts = (targetScript.getAttribute('excepts') || "").split(",");
+        if (excepts.length > 0) {
+            if (excepts.indexOf("jquery") === -1) {
+                inputScript("jquery/jquery.min.js");
+            }
+            if (excepts.indexOf("leaflet") === -1) {
+                inputCSS("leaflet/css/leaflet.css");
+                inputScript("leaflet/leaflet.js");
+            }
+        }
         inArray(includes);
 
     }

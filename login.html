@@ -5,12 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'/>
-    <title>Login</title>
-    <link href="js/ui-libs/metro/css/metro.css" rel="stylesheet">
-    <link href="js/ui-libs/metro/css/metro-icons.css" rel="stylesheet">
-    <link href="js/ui-libs/metro/css/metro-responsive.css" rel="stylesheet">
-    <script src="js/third-js-libs/jquery/jquery.min.js"></script>
-    <script src="js/ui-libs/metro/js/metro.js"></script>
+    <script src="js_libs/third-js-libs/include-3rdlibs.js" include="metro" excepts="leaflet"></script>
 
     <style>
         .login-form {
@@ -27,9 +22,11 @@
             transform: scale(.8);
         }
     </style>
+
     <script>
         $(function () {
             var form = $(".login-form");
+
             form.css({
                 opacity: 1,
                 "-webkit-transform": "scale(1)",
@@ -60,7 +57,6 @@
         </div>
         <br/>
         <br/>
-
         <div class="form-actions">
             <button type="submit" class="button primary">Login to...</button>
             <button type="button" class="button link">Cancel</button>

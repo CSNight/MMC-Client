@@ -1,67 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel='shortcut icon' type='image/x-icon' href='images/favicon.ico'/>
-    <script src="js_libs/third-js-libs/include-3rdlibs.js" include="metro" excepts="leaflet"></script>
-
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <title>Login</title>
     <style>
         .login-form {
-            width: 25rem;
-            height: 18.75rem;
-            position: fixed;
+            width: 500px;
+            height: auto;
             top: 50%;
-            margin-top: -9.375rem;
-            left: 50%;
-            margin-left: -12.5rem;
-            background-color: #ffffff;
-            opacity: 0;
-            -webkit-transform: scale(.8);
-            transform: scale(.8);
+            margin-top: -160px;
         }
     </style>
-
-    <script>
-        $(function () {
-            var form = $(".login-form");
-
-            form.css({
-                opacity: 1,
-                "-webkit-transform": "scale(1)",
-                "transform": "scale(1)",
-                "-webkit-transition": ".5s",
-                "transition": ".5s"
-            });
-        });
-    </script>
+    <script src="js_libs/third-js-libs/include-3rdlibs.js" include="metro.v4" excepts="leaflet"></script>
 </head>
-<body class="bg-darkTeal">
-<div class="login-form padding20 block-shadow">
-    <form>
-        <h1 class="text-light">Login to service</h1>
-        <hr class="thin"/>
-        <br/>
-        <div class="input-control text full-size" data-role="input">
-            <label for="user_login">User email:</label>
-            <input type="text" name="user_login" id="user_login">
-            <button class="button helper-button clear"><span class="mif-cross"></span></button>
-        </div>
-        <br/>
-        <br/>
-        <div class="input-control password full-size" data-role="input">
-            <label for="user_password">User password:</label>
-            <input type="password" name="user_password" id="user_password">
-            <button class="button helper-button reveal"><span class="mif-looks"></span></button>
-        </div>
-        <br/>
-        <br/>
-        <div class="form-actions">
-            <button type="submit" class="button primary">Login to...</button>
-            <button type="button" class="button link">Cancel</button>
-        </div>
-    </form>
-</div>
+<body class="h-vh-100 bg-brandColor2">
+<form class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
+      data-role="validator"
+      action="javascript:"
+      data-clear-invalid="2000"
+      data-on-validate-form="validateForm">
+    <span class="mif-vpn-lock mif-4x place-right" style="margin-top: -10px;"></span>
+    <h2 class="text-light">Login to service</h2>
+    <hr class="thin mt-4 mb-4 bg-white">
+    <div class="form-group">
+        <input type="text" data-role="input" data-prepend="<span class='mif-envelop'>" placeholder="Enter your email..."
+               data-validate="required email">
+    </div>
+    <div class="form-group">
+        <input type="password" data-role="input" data-prepend="<span class='mif-key'>"
+               placeholder="Enter your password..." data-validate="required minlength=6">
+    </div>
+    <div class="form-group mt-10">
+        <input type="checkbox" data-role="checkbox" data-caption="Remember me" class="place-right">
+        <button class="button">Login</button>
+    </div>
+</form>
+
+
+<script>
+    function invalidForm() {
+        var form = $(this);
+        form.addClass("ani-ring");
+        setTimeout(function () {
+            form.removeClass("ani-ring");
+        }, 2000);
+    }
+
+    function validateForm() {
+        $(".login-form").animate({
+            opacity: 0
+        });
+    }
+</script>
+
 </body>
 </html>

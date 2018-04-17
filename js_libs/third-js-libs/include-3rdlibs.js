@@ -110,11 +110,16 @@
                     inputScript("common/randomColor.min.js");
                     inputCSS("bootstrap/css/bootstrap-datetimepicker.min.css");
                     break;
-                case "metro":
-                    inputScript("metro/js/metro.js");
-                    inputCSS("metro/css/metro.css");
-                    inputCSS("metro/css/metro-icons.css");
-                    inputCSS("metro/css/metro-responsive.css");
+                case "metro.v4":
+                    inputScript("metro/v4/js/metro.v4.js");
+                    inputCSS("metro/v4/css/metro-all.css");
+                    inputCSS("metro/v4/css/metro-icons.css");
+                    break;
+                case "metro.v3":
+                    inputScript("metro/v3/js/metro.v3.js");
+                    inputCSS("metro/v3/css/metro.css");
+                    inputCSS("metro/v3/css/metro-icons.css");
+                    inputCSS("metro/v3/css/metro-responsive.css");
                     break;
                 case "font-awesome":
                     inputCSS("font-awesome/font-awesome.min.css");

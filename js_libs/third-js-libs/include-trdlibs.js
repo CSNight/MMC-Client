@@ -1,5 +1,5 @@
 (function () {
-    var r = new RegExp("(^|(.*?\\/))(include-3rdlibs\.js)(\\?|$)"), s = document
+    var r = new RegExp("(^|(.*?\\/))(include-trdlibs\.js)(\\?|$)"), s = document
         .getElementsByTagName('script'), src, m, targetScript;
     for (var i = 0; i < s.length; i++) {
         src = s[i].getAttribute('src');

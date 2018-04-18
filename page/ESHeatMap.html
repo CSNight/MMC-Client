@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>热力/格网图</title>
     <script type="text/javascript" include="moment,bootstrap,geohash,mapv,elasticsearch"
-            src="js_libs/third-js-libs/include-3rdlibs.js"></script>
-    <script type="text/javascript" src="js_libs/supermap-libs/iclient9-leaflet.js"></script>
-    <link rel="stylesheet" href="js_libs/supermap-libs/iclient9-leaflet.css"/>
-    <script type="text/javascript" src="js_libs/base-libs/esl.source.js"></script>
+            src="../js_libs/third-js-libs/include-trdlibs.js"></script>
+    <script type="text/javascript" src="../js_libs/supermap-libs/iclient9-leaflet.js"></script>
+    <link rel="stylesheet" href="../js_libs/supermap-libs/iclient9-leaflet.css"/>
+    <script type="text/javascript" src="../js_libs/base-libs/esl.source.js"></script>
     <style>
         .bootstrap-select {
             width: 168px !important;
@@ -28,7 +28,7 @@
 <script type="text/javascript">
     var map, liveRenderer, liveDataSet, timeControl;
     require.config({
-        paths: {"control": "./busi-libs/es_search/control"}
+        paths: {"control": "../busi-libs/es_search/control"}
     });
     require(['control'], function (control) {
         var flights_options = {

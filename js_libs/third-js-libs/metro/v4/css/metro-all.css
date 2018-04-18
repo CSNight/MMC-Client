@@ -11183,8 +11183,26 @@ div {
 .mw-100 {
   max-width: 100% !important;
 }
+.mw-85 {
+  max-width: 85% !important;
+}
+.w-85{
+  width: 85% !important;
+}
 .w-75 {
   width: 75% !important;
+}
+.w-65 {
+  width: 65% !important;
+}
+.w-55 {
+  width: 55% !important;
+}
+.w-45 {
+  width: 45% !important;
+}
+.w-35 {
+  width: 35% !important;
 }
 .h-75 {
   height: 75% !important;

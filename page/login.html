@@ -19,6 +19,7 @@
     </style>
     <script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4" excepts="leaflet"></script>
     <script src="../busi-libs/user_manage/login_module.js"></script>
+    <script src="../busi-libs/ServicesRestAjax.js"></script>
 </head>
 <body class="h-vh-100 w-100 bg-dark">
 <div class="notify-container pos-center"></div>
@@ -31,7 +32,8 @@
         <form class="login-form bg-white p-6 mx-auto border bd-default win-shadow"
               data-role="validator"
               action="javascript:"
-              data-clear-invalid="2000">
+              data-clear-invalid="2000"
+              data-on-validate-form="validateForm">
             <span class="mif-vpn-lock mif-4x place-right" style="margin-top: -10px;"></span>
             <h2 class="text-light">Login to service</h2>
             <hr class="thin mt-4 mb-4 bg-white">
@@ -41,18 +43,19 @@
                        data-validate="required email">
             </div>
             <div class="form-group">
-                <input  id="pwd" type="password" data-role="input" data-prepend="<span class='mif-key'>"
+                <input id="pwd" type="password" data-role="input" data-prepend="<span class='mif-key'>"
                        placeholder="Enter your password..." data-validate="required minlength=6">
             </div>
             <div class="form-group">
                 <input id="code" class="w-65" type="text" data-role="input" data-prepend="<span class='mif-checkmark'>"
                        placeholder="Enter verify code..." data-validate="required maxlength=4"/>
-                <span class="pos-absolute w-35 fixed-top put-right h-100"><img class="w-100 h-100" src=""></span>
+                <span class="pos-absolute w-35 fixed-top put-right h-100"><img id="code_img" class="w-100 h-100"></span>
             </div>
             <div class="form-group mt-10">
-                <input type="checkbox" data-role="checkbox" data-caption="Remember me" class="place-right">
-                <button class="button" onclick="validateForm()">Login</button>
-                <a class="ml-20" href="" style="font-size:14px">Account SignUp?</a>
+                <input id="remember" type="checkbox" data-role="checkbox" data-caption="Remember me"
+                       class="place-right">
+                <button id="submit" class="button">Login</button>
+                <a class="ml-20" href="signup.html" style="font-size:14px">Account SignUp?</a>
             </div>
         </form>
     </div>

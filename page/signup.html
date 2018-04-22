@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <title>SignUp</title>
+    <style>
+        .login-form {
+            width: 400px;
+            height: auto;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        .app-bar-menu li {
+            list-style: none!important;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4" excepts="leaflet"></script>
+    <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/darcula.css" rel="stylesheet">
+
+</head>
+<body class="h-vh-100">
+
+<div class="container">
+    <div class="pos-center">
+        <form class="login-form p-6 mx-auto border bd-default win-shadow"
+              data-role="validator"
+              action="javascript:"
+              data-clear-invalid="2000">
+            <span class="mif-vpn-lock mif-4x place-right" style="margin-top: -10px;"></span>
+            <h2 class="text-light">Account Sign Up</h2>
+            <hr class="thin mt-4 mb-4 bg-white">
+            <div class="form-group">
+                <input id="role" type="text" data-role="input" data-prepend="<span class='mif-user'>"
+                       placeholder="Enter your username..." data-validate="required">
+            </div>
+            <div class="form-group">
+                <input id="username" type="text" data-role="input" data-prepend="<span class='mif-envelop'>"
+                       placeholder="Enter your email..."
+                       data-validate="required email">
+            </div>
+            <div class="form-group">
+                <input id="pwd" type="password" data-role="input" data-prepend="<span class='mif-key'>"
+                        placeholder="Enter your password..." data-validate="required minlength=6">
+            </div>
+            <div class="form-group">
+                <input id="pwd_conf" type="password" data-role="input" data-prepend="<span class='mif-key'>"
+                        placeholder="Confirm your password..." data-validate="required minlength=6">
+            </div>
+            <div class="form-group">
+                <button class="button" onclick="validateForm()">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+<a class="fg-white mr-20 mb-20 pos-fixed pos-bottom-right"><span class="mif-codepen"></span>MMC Designed By CSNight</a>
+</body>
+</html>

@@ -12,21 +12,13 @@ function validateForm() {
 }
 
 $(document).ready(function () {
+    reset('');
     getCheckImg();
     if (getCookie('user') && getCookie('pwd')) {
         $("#username").val(getCookie('user'));
         $("#pwd").val(getCookie('pwd'));
         $('#remember').prop('checked', true);
     }
-    $('#remember').click(function () {
-        if ($('#remember').prop('checked')) {
-            setCookie('user', $("#username").val(), 1); //保存帐号到cookie，有效期1天
-            setCookie('pwd', $("#pwd").val(), 1); //保存密码到cookie，有效期1天
-        } else {
-            delCookie('user');
-            delCookie('pswd');
-        }
-    });
     $(document).keydown(function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         if (e && e.keyCode == 13) {
@@ -60,7 +52,24 @@ function delCookie(name) {
 }
 
 function login_callback(res) {
-
+    if (res.response.status == 402 && res.response.message == "code_incorrect") {
+        $("#code_img").click();
+        $('#code').val('');
+        $('#info').html('Verify code error!');
+    } else if (res.response.status == 401 && res.response.message == "user_info_incorrect") {
+        reset('User information incorrect!');
+    } else if (res.response.status == 502 && res.response.message == "param_none") {
+        reset('Login parameters none!');
+    } else if (res.response.status == 200 && res.response.message == "success") {
+        if ($('#remember').prop('checked')) {
+            setCookie('user', $("#username").val(), 1); //保存帐号到cookie，有效期1天
+            setCookie('pwd', $("#pwd").val(), 1); //保存密码到cookie，有效期1天
+        } else {
+            delCookie('user');
+            delCookie('pwd');
+        }
+        window.location.href = "main.html?role=" + res.response.role + "&uid=" + res.response.uid;
+    }
 }
 
 function getCheckImg() {
@@ -112,4 +121,12 @@ function customCube(element) {
     setTimeout(function () {
         customCube(element);
     }, 2000);
+}
+
+function reset(error) {
+    $("#code_img").click();
+    $('#username').val('');
+    $('#pwd').val('');
+    $('#code').val('');
+    $('#info').html(error);
 }

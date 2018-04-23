@@ -11,12 +11,15 @@
             width: 400px;
             height: auto;
         }
+
         h2 {
             margin-top: 20px;
         }
+
         .app-bar-menu li {
-            list-style: none!important;
+            list-style: none !important;
         }
+
         .container {
             width: 100%;
             height: 100%;
@@ -24,7 +27,8 @@
     </style>
     <script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4" excepts="leaflet"></script>
     <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/darcula.css" rel="stylesheet">
-
+    <script src="../busi-libs/user_manage/signup_module.js"></script>
+    <script src="../busi-libs/ServicesRestAjax.js"></script>
 </head>
 <body class="h-vh-100">
 
@@ -33,7 +37,8 @@
         <form class="login-form p-6 mx-auto border bd-default win-shadow"
               data-role="validator"
               action="javascript:"
-              data-clear-invalid="2000">
+              data-clear-invalid="2000"
+              data-on-validate-form="validateForm">
             <span class="mif-vpn-lock mif-4x place-right" style="margin-top: -10px;"></span>
             <h2 class="text-light">Account Sign Up</h2>
             <hr class="thin mt-4 mb-4 bg-white">
@@ -48,14 +53,17 @@
             </div>
             <div class="form-group">
                 <input id="pwd" type="password" data-role="input" data-prepend="<span class='mif-key'>"
-                        placeholder="Enter your password..." data-validate="required minlength=6">
+                       placeholder="Enter your password..." data-validate="required minlength=6">
             </div>
             <div class="form-group">
                 <input id="pwd_conf" type="password" data-role="input" data-prepend="<span class='mif-key'>"
-                        placeholder="Confirm your password..." data-validate="required minlength=6">
+                       placeholder="Confirm your password..." data-validate="required minlength=6">
             </div>
             <div class="form-group">
-                <button class="button" onclick="validateForm()">Sign Up</button>
+                <a id="info" style="color:red"></a>
+            </div>
+            <div class="form-group">
+                <button id="submit" class="button">Sign Up</button>
             </div>
         </form>
     </div>

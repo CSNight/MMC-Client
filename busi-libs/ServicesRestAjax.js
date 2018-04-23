@@ -30,7 +30,7 @@ UrlConfig.getFileURI = function () {
  */
 function RestQueryAjax(callback) {
     this.login_REST = function (data) {
-        ResultPost(data, 'user', 'login');
+        ResultGet(data, 'user', 'login');
     };
     this.check_login_REST = function (data) {
         ResultGet(data, 'user', 'check_login');

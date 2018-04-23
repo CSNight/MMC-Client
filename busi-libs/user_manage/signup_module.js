@@ -34,20 +34,14 @@ function signup_callback(res) {
     } else if (res.response.status == 403 && res.response.message == "user_exist") {
         reset('User already exist!');
     } else if (res.response.status == 200 && res.response.message == "success") {
-        if ($('#remember').prop('checked')) {
-            setCookie('user', $("#username").val(), 1); //保存帐号到cookie，有效期1天
-            setCookie('pwd', $("#pwd").val(), 1); //保存密码到cookie，有效期1天
-        } else {
-            delCookie('user');
-            delCookie('pwd');
-        }
-        window.location.href = "main.html?role=" + res.response.role + "&uid=" + res.response.uid;
+        window.location.href = "main.html?role=" + res.response.element.role + "&uid=" + res.response.element.uid;
     }
 }
 
 function reset(error) {
     $("#code_img").click();
     $('#username').val('');
+    $('#role').val('');
     $('#pwd').val('');
     $('#code').val('');
     $('#info').html(error);

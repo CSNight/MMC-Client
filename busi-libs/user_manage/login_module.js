@@ -68,7 +68,7 @@ function login_callback(res) {
             delCookie('user');
             delCookie('pwd');
         }
-        window.location.href = "main.html?role=" + res.response.role + "&uid=" + res.response.uid;
+        window.location.href = "main.html?role=" + res.response.element.role + "&uid=" + res.response.element.uid;
     }
 }
 

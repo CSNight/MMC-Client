@@ -77,15 +77,12 @@ function getCheckImg() {
     $("#code_img").click(
         function () {
             var time_now = new Date().getTime();
-            $("#code_img").attr(
-                'src',
-                UrlConfig.getBaseURI() + 'user/verify?w=100&h=36&d=' + time_now);
+            $("#code_img").attr('src', UrlConfig.getBaseURI() + 'user/verify?w=100&h=36&d=' + time_now);
         });
 }
 
 function customCube(element) {
     var sides = ['top', 'left', 'right'];
-
     function toggle(cell, func, timeout) {
         var side = cell.data("side");
         var id = cell.data("id");
@@ -109,15 +106,12 @@ function customCube(element) {
             do {
                 id = Metro.utils.random(1, 64);
             } while (array.indexOf(id) > -1);
-
             cell = $(element).find("." + this + "-side .cell-id-" + id);
-
             toggle(cell, 'on', 100 * t);
             toggle(cell, 'off', 200 * t);
             t++;
         }
     });
-
     setTimeout(function () {
         customCube(element);
     }, 2000);

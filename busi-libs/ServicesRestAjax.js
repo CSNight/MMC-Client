@@ -44,6 +44,33 @@ function RestQueryAjax(callback) {
     this.delete_user_REST = function (data) {
         ResultGet(data, 'user', 'delete_user');
     };
+    this.get_tree_REST = function (data) {
+        ResultPost(data, 'tree', 'get_tree');
+    };
+    this.del_tree_REST = function (data) {
+        ResultGet(data, 'tree', 'del_tree');
+    };
+    this.create_tree_REST = function (data) {
+        ResultGet(data, 'tree', 'create_tree');
+    };
+    this.add_node_REST = function (data) {
+        ResultGet(data, 'tree', 'add_node');
+    };
+    this.rename_node_REST = function (data) {
+        ResultGet(data, 'tree', 'rename_node');
+    };
+    this.del_node_REST = function (data) {
+        ResultGet(data, 'tree', 'del_node');
+    };
+    this.del_file_REST = function (data) {
+        ResultGet(data, 'tree', 'del_file');
+    };
+    this.add_file_REST = function (data) {
+        ResultGet(data, 'tree', 'add_file');
+    };
+    this.count_file_REST = function (data) {
+        ResultGet(data, 'tree', 'count_file');
+    };
     // 返回函数
     RestQueryAjax.prototype = {
         callback: callback

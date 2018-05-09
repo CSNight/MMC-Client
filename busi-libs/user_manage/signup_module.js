@@ -43,6 +43,7 @@ function reset(error) {
     $('#username').val('');
     $('#role').val('');
     $('#pwd').val('');
+    $('#pwd_conf').val('');
     $('#code').val('');
     $('#info').html(error);
 }

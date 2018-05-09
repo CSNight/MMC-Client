@@ -4,205 +4,101 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico' />
+    <link rel='shortcut icon' type='image/x-icon' href='../favicon.ico'/>
     <title>Welcome to Media Center</title>
-    <script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v3,jq-dateTables" excepts="leaflet"></script>
-    <style>
-        html, body {
-            height: 100%;
-        }
-        body {
-        }
-        .page-content {
-            padding-top: 3.125rem;
-            min-height: 100%;
-            height: 100%;
-        }
-        .table .input-control.checkbox {
-            line-height: 1;
-            min-height: 0;
-            height: auto;
-        }
-        @media screen and (max-width: 800px){
-            #cell-sidebar {
-                flex-basis: 52px;
-            }
-            #cell-content {
-                flex-basis: calc(100% - 52px);
-            }
-        }
-    </style>
-    <script>
-        function pushMessage(t){
-            var mes = 'Info|Implement independently';
-            $.Notify({
-                caption: mes.split("|")[0],
-                content: mes.split("|")[1],
-                type: t
-            });
-        }
-
-        $(function(){
-            $('.sidebar').on('click', 'li', function(){
-                if (!$(this).hasClass('active')) {
-                    $('.sidebar li').removeClass('active');
-                    $(this).addClass('active');
-                }
-            })
-        })
-    </script>
 </head>
-<body class="bg-steel">
-<div class="app-bar fixed-top darcula" data-role="appbar">
-    <a class="app-bar-element branding">BrandName</a>
-    <span class="app-bar-divider"></span>
-    <ul class="app-bar-menu">
-        <li><a href="">Dashboard</a></li>
-        <li>
-            <a href="" class="dropdown-toggle">Project</a>
-            <ul class="d-menu" data-role="dropdown">
-                <li><a href="">New project</a></li>
-                <li class="divider"></li>
-                <li>
-                    <a href="" class="dropdown-toggle">Reopen</a>
-                    <ul class="d-menu" data-role="dropdown">
-                        <li><a href="">Project 1</a></li>
-                        <li><a href="">Project 2</a></li>
-                        <li><a href="">Project 3</a></li>
-                        <li class="divider"></li>
-                        <li><a href="">Clear list</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li><a href="">Security</a></li>
-        <li><a href="">System</a></li>
-        <li>
-            <a href="" class="dropdown-toggle">Help</a>
-            <ul class="d-menu" data-role="dropdown">
-                <li><a href="">ChatOn</a></li>
-                <li><a href="">Community support</a></li>
-                <li class="divider"></li>
-                <li><a href="">About</a></li>
-            </ul>
-        </li>
-    </ul>
-
-    <div class="app-bar-element place-right">
-        <span class="dropdown-toggle"><span class="mif-cog"></span> User Name</span>
-        <div class="app-bar-drop-container padding10 place-right no-margin-top block-shadow fg-dark" data-role="dropdown" data-no-close="true" style="width: 220px">
-            <h2 class="text-light">Quick settings</h2>
-            <ul class="unstyled-list fg-dark">
-                <li><a href="" class="fg-white1 fg-hover-yellow">Profile</a></li>
-                <li><a href="" class="fg-white2 fg-hover-yellow">Security</a></li>
-                <li><a href="" class="fg-white3 fg-hover-yellow">Exit</a></li>
-            </ul>
-        </div>
+<body class="h-vh-100">
+<script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4,jquery" excepts="leaflet"></script>
+<script src="../busi-libs/ServicesRestAjax.js"></script>
+<script src="../busi-libs/center_control/center_user.js"></script>
+<link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-dark.css" rel="stylesheet">
+<div class="mw-100 h-auto">
+    <div class="pos-relative app-bar-expand-md z-dropdown" data-role="appbar">
+        <a href="javascript:;" class="brand no-hover text-bold"><span class="mif-yelp"></span>MMC</a>
+        <ul class="app-bar-menu">
+            <li><a href="#">Home</a></li>
+            <li>
+                <a href="#" class="dropdown-toggle">Collections</a>
+                <ul class="d-menu" data-role="dropdown">
+                    <li><a href="#">Management</a></li>
+                    <li><a href="#">Statistics</a></li>
+                </ul>
+            </li>
+            <li><a href="#">Personal Center</a></li>
+        </ul>
+        <a id="userrole" class="brand no-hover text-bold pos-absolute pos-top-right mr-20"><span
+                class="mif-user"></span> User</a>
+        <ul class="app-bar-menu pos-absolute pos-top-right">
+            <li>
+                <a href="javascript:logout()">Logout</a>
+            </li>
+        </ul>
     </div>
 </div>
+<div class="mw-100 h-90">
+    <div data-role="navview" data-compact="md" data-expanded="lg" data-toggle="#pane-toggle">
+        <nav class="navview-pane">
+            <button class="pull-button">
+                <span class="mif-menu fg-light"></span>
+            </button>
+            <div class="suggest-box">
+                <input data-role="search" data-clear-button="false"
+                       data-search-button-icon="<span class='mif-search fg-light'></span>">
+                <button class="holder">
+                    <span class="mif-search fg-light"></span>
+                </button>
+            </div>
+            <ul class="navview-menu">
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-home"></span></span><span class="caption">Home</span>
+                    </a>
+                </li>
+                <li class="item-separator"></li>
+                <li class="item-header">Collections</li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-image"></span></span><span class="caption">Images</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-music"></span></span><span class="caption">Music</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-video-camera"></span></span><span
+                            class="caption">Video</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-books"></span></span><span class="caption">Documents</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span class="icon"><span class="mif-folder"></span></span><span class="caption">Packages</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="navview-content pl-4-md pr-4-md">
+            <div class="d-flex pt-2">
+                <div class="pos-relative">
+                    <button class="button"><span class="mif-tree"></span> CreateTree</button>
+                    <button class="button"><span class="mif-plus"></span> AddNode</button>
+                    <button class="button"><span class="mif-cog"></span> ModifyNode</button>
+                    <button class="button"><span class="mif-cross"></span> DeleteNode</button>
+                    <button class="button"><span class="mif-upload"></span> UploadFile</button>
+                    <button class="button"><span class="mif-spinner4"></span> Refresh</button>
+                </div>
+            </div>
+            <div class='place-left mw-25 h-100 pt-2 user_tree'>
 
-<div class="page-content">
-    <div class="flex-grid no-responsive-future" style="height: 100%;">
-        <div class="row" style="height: 100%">
-            <div class="cell size-x200" id="cell-sidebar" style="background-color: #71b1d1; height: 100%">
-                <ul class="sidebar">
-                    <li><a href="#">
-                        <span class="mif-apps icon"></span>
-                        <span class="title">all items</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="mif-vpn-publ icon"></span>
-                        <span class="title">websites</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                    <li class="active"><a href="#">
-                        <span class="mif-drive-eta icon"></span>
-                        <span class="title">Virtual machines</span>
-                        <span class="counter">2</span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="mif-cloud icon"></span>
-                        <span class="title">Cloud services</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="mif-database icon"></span>
-                        <span class="title">SQL Databases</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="mif-cogs icon"></span>
-                        <span class="title">Automation</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                    <li><a href="#">
-                        <span class="mif-apps icon"></span>
-                        <span class="title">all items</span>
-                        <span class="counter">0</span>
-                    </a></li>
-                </ul>
             </div>
-            <div class="cell auto-size padding20 bg-white" id="cell-content">
-                <h1 class="text-light">Virtual machines <span class="mif-drive-eta place-right"></span></h1>
-                <hr class="thin bg-grayLighter">
-                <button class="button primary" onclick="pushMessage('info')"><span class="mif-plus"></span> Create...</button>
-                <button class="button success" onclick="pushMessage('success')"><span class="mif-play"></span> Start</button>
-                <button class="button warning" onclick="pushMessage('warning')"><span class="mif-loop2"></span> Restart</button>
-                <button class="button alert" onclick="pushMessage('alert')">Stop all machines</button>
-                <hr class="thin bg-grayLighter">
-                <table class="dataTable border bordered" data-role="datatable" data-auto-width="false">
-                    <thead>
-                    <tr>
-                        <td style="width: 20px">
-                        </td>
-                        <td class="sortable-column sort-asc" style="width: 100px">ID</td>
-                        <td class="sortable-column">Machine name</td>
-                        <td class="sortable-column">Address</td>
-                        <td class="sortable-column" style="width: 20px">Status</td>
-                        <td style="width: 20px">Switch</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <label class="input-control checkbox small-check no-margin">
-                                <input type="checkbox">
-                                <span class="check"></span>
-                            </label>
-                        </td>
-                        <td>123890723212</td>
-                        <td>Machine number 1</td>
-                        <td><a href="http://virtuals.com/machines/123890723212">link</a></td>
-                        <td class="align-center"><span class="mif-checkmark fg-green"></span></td>
-                        <td>
-                            <label class="switch-original">
-                                <input type="checkbox" checked>
-                                <span class="check"></span>
-                            </label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label class="input-control checkbox small-check no-margin">
-                                <input type="checkbox">
-                                <span class="check"></span>
-                            </label>
-                        </td>
-                        <td>123890723212</td>
-                        <td>Machine number 2</td>
-                        <td><a href="http://virtuals.com/machines/123890723212">link</a></td>
-                        <td class="align-center"><span class="mif-stop fg-red"></span></td>
-                        <td>
-                            <label class="switch-original">
-                                <input type="checkbox">
-                                <span class="check"></span>
-                            </label>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+            <div class='place-right mw-75 h-100 pt-2'><a>dsadsad</a></div>
         </div>
     </div>
 </div>

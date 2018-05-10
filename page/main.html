@@ -9,8 +9,17 @@
 </head>
 <body class="h-vh-100">
 <script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4,jquery" excepts="leaflet"></script>
+<script type="text/javascript" src="../js_libs/base-libs/esl.source.js"></script>
 <script src="../busi-libs/ServicesRestAjax.js"></script>
-<script src="../busi-libs/center_control/center_user.js"></script>
+<script type="text/javascript">
+    require.config({
+        baseUrl:'../',
+        paths: {"main": "busi-libs/center_control/main"}
+    });
+    require(['main'], function (control) {
+
+    });
+</script>
 <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-dark.css" rel="stylesheet">
 <div class="mw-100 h-auto">
     <div class="pos-relative app-bar-expand-md z-dropdown" data-role="appbar">
@@ -30,7 +39,7 @@
                 class="mif-user"></span> User</a>
         <ul class="app-bar-menu pos-absolute pos-top-right">
             <li>
-                <a href="javascript:logout()">Logout</a>
+                <a href="javascript:;" id="logout">Logout</a>
             </li>
         </ul>
     </div>
@@ -85,20 +94,6 @@
             </ul>
         </nav>
         <div class="navview-content pl-4-md pr-4-md">
-            <div class="d-flex pt-2">
-                <div class="pos-relative">
-                    <button class="button"><span class="mif-tree"></span> CreateTree</button>
-                    <button class="button"><span class="mif-plus"></span> AddNode</button>
-                    <button class="button"><span class="mif-cog"></span> ModifyNode</button>
-                    <button class="button"><span class="mif-cross"></span> DeleteNode</button>
-                    <button class="button"><span class="mif-upload"></span> UploadFile</button>
-                    <button class="button"><span class="mif-spinner4"></span> Refresh</button>
-                </div>
-            </div>
-            <div class='place-left mw-25 h-100 pt-2 user_tree'>
-
-            </div>
-            <div class='place-right mw-75 h-100 pt-2'><a>dsadsad</a></div>
         </div>
     </div>
 </div>

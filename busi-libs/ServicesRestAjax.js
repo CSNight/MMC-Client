@@ -71,6 +71,9 @@ function RestQueryAjax(callback) {
     this.count_file_REST = function (data) {
         ResultGet(data, 'tree', 'count_file');
     };
+    this.get_icon_REST=function(data){
+        ResultPost(data, 'tree', 'get_icons');
+    };
     // 返回函数
     RestQueryAjax.prototype = {
         callback: callback

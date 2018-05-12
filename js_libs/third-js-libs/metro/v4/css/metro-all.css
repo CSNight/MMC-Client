@@ -29408,8 +29408,8 @@ video:-webkit-full-screen {
 .listview.view-content {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-flow: column wrap;
-          flex-flow: column wrap;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
 }
 .listview.view-icons-medium,
 .listview.view-icons-large,
@@ -29474,7 +29474,7 @@ video:-webkit-full-screen {
   width: 20px;
   height: 20px;
   line-height: 26px;
-  font-size: 18px;
+  font-size: 15px;
 }
 .listview.view-list .node > .data {
   line-height: 26px;
@@ -29487,7 +29487,7 @@ video:-webkit-full-screen {
   width: 20px;
   height: 20px;
   line-height: 26px;
-  font-size: 18px;
+  font-size: 14px;
 }
 .listview.view-table .icon > * {
   width: 100%;
@@ -29650,7 +29650,8 @@ video:-webkit-full-screen {
 .listview .node-group > .data {
   padding-left: 24px;
   line-height: 24px;
-  font-size: 18px;
+  font-size: 12px;
+  color: rgb(27, 125, 218);
 }
 .listview .node-group .node-toggle {
   position: relative;
@@ -29702,7 +29703,7 @@ video:-webkit-full-screen {
           transform: rotate(-45deg);
 }
 .listview .node-group + .node-group {
-  margin-top: .5rem;
+  margin-top: .15rem;
 }
 .listview .node-group + .listview {
   margin-top: .5rem;

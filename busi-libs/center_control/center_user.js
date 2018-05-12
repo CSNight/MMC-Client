@@ -117,15 +117,19 @@ define(function (require) {
         var html_content = "";
         var title = "";
         if (dia_type == "addnode") {
-            html_content = "<div><input data-prepend='<a>Node Name:</a>' data-role=\"input\" data-clear-button=\"true\" type=\"text\">";
-            html_content += "<input data-prepend='<a>Icon:</a>' data-role=\"input\" data-clear-button=\"true\" type=\"c\">";
-            html_content += "</div>";
+            html_content = "<div><input id='node_name' data-prepend='<a>Node Name:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
+            html_content += "<input id='node_icon' data-prepend='<a>Icon:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
+            html_content += "<div style='height: 100px;overflow-x:hidden'>";
+            html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
+            html_content += "</ul></div></div>";
             title = "Add New Node";
         }
+
+
         Metro.dialog.create({
             title: title,
             content: html_content,
-            width: 300,
+            width: 500,
             actions: [
                 {
                     caption: "<span class='mif-checkmark'></span> OK",
@@ -146,18 +150,36 @@ define(function (require) {
 
             },
             onOpen: function (e) {
-
+                buildIconPanel();
             }
         });
     }
 
     function buildIconPanel() {
         var rest_icon = new RestQueryAjax(icons_callback);
-        rest_icon.get_icon_REST(data);
+        rest_icon.get_icon_REST({});
+        var lv = $('#icons');
 
         function icons_callback(res) {
             if (res.response.status == 200) {
-
+                icons_list = res.response.element;
+                for (var key in icons_list) {
+                    var cat_node = lv.data('listview').addGroup({
+                        caption: key
+                    });
+                    for (var i = 0; i < icons_list[key].length; i++) {
+                        var icon = icons_list[key][i];
+                        for (var x in icon) {
+                            lv.data('listview').add(cat_node, {
+                                caption: x,
+                                icon: "<span class='" + icon[x] + " mif-lg'>"
+                            })
+                        }
+                    }
+                }
+                lv.data('listview').options.onNodeClick = function icon_node_click(e, le) {
+                    $('#node_icon').val(e[0].innerText);
+                }
             }
         }
     }

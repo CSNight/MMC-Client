@@ -83,6 +83,7 @@ function getCheckImg() {
 
 function customCube(element) {
     var sides = ['top', 'left', 'right'];
+
     function toggle(cell, func, timeout) {
         var side = cell.data("side");
         var id = cell.data("id");

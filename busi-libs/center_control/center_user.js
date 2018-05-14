@@ -1,5 +1,5 @@
 define(function (require) {
-    var uid, role;
+    var uid, role, current_tree_id, _Tree;
     var init = function () {
         uid = getQueryString('uid');
         role = getQueryString('role');
@@ -17,15 +17,14 @@ define(function (require) {
         html += '<button class="button"><span class="mif-cross"></span> DeleteNode</button> ';
         html += '<button class="button"><span class="mif-upload"></span> UploadFile</button> ';
         html += '<button class="button"><span class="mif-spinner4"></span> Refresh</button> ';
-        html += '</div></div>';
-        html += '<div class=\'place-left mw-25 h-100 pt-2 user_tree\'></div>';
+        html += '</div></div><div class=\'place-left mw-25 h-100 pt-2 user_tree\'></div>';
         html += '<div class=\'place-right mw-75 h-100 pt-2\'></div>';
         $('.navview-content').html(html);
         tool_status('all', true);
         $('.mif-spinner4').parent().click(get_user_tree);
         $('.mif-tree').parent().click(create_user_tree);
         $('.mif-plus').parent().click(function () {
-            open_dialog('addnode');
+            open_dialog('add_node');
         });
         $('.mif-cross').parent().click(del_tree_node);
     };
@@ -37,13 +36,13 @@ define(function (require) {
         rest_logout.logout_REST(data);
 
         function logout_callback(res) {
-            if (res.response.status == 200 || res.response.status == 501) {
+            if (res.response.status === 200 || res.response.status === 501) {
                 window.location.href = "login.html"
             }
         }
     };
     var create_user_tree = function () {
-        $('.user_tree').html('');
+        $('.user_tree').html('<ul data-role="treeview" id="_tree"></ul>');
         var rest_tree = new RestQueryAjax(createtree_callback);
         var data = {
             "uid": uid
@@ -51,19 +50,26 @@ define(function (require) {
         rest_tree.create_tree_REST(data);
 
         function createtree_callback(res) {
-            if (res.response.status == 200) {
+            if (res.response.status === 200) {
+                _Tree = $('#_tree').data('treeview');
+                _Tree.addTo(null, {
+                    caption: 'User Root',
+                    icon: '<span class=\'mif-tree\'></span>',
+                    html: "<a id='" + res.response.element.id + "'></a>"
+                });
+                _Tree.onNodeClick = node_click;
                 tool_status('all', false);
                 tool_status('mif-tree', true);
-            } else if (res.response.status == 102) {
-                tool_status('all', true);
-                tool_status('mif-tree', false);
-            } else if (res.response.status == 501) {
+            } else if (res.response.status === 300) {
+                tool_status('all', false);
+                tool_status('mif-tree', true);
+            } else if (res.response.status === 501) {
                 logout_func();
             }
         }
     };
     var get_user_tree = function () {
-        $('.user_tree').html('');
+        $('.user_tree').html('<ul data-role="treeview" data-select-node=\'true\' id="_tree"></ul>');
         var rest_tree = new RestQueryAjax(gettree_callback);
         var data = {
             "uid": uid
@@ -71,16 +77,48 @@ define(function (require) {
         rest_tree.get_tree_REST(data);
 
         function gettree_callback(res) {
-            if (res.response.status == 200) {
+            if (res.response.status === 200) {
+                _Tree = $('#_tree').data('treeview');
+                _Tree.onNodeClick = node_click;
+                add_node(res.response.element);
                 tool_status('all', false);
                 tool_status('mif-tree', true);
-            } else if (res.response.status == 102) {
+            } else if (res.response.status === 102) {
                 tool_status('all', true);
                 tool_status('mif-tree', false);
-            } else if (res.response.status == 501) {
+            } else if (res.response.status === 501) {
                 logout_func();
             }
         }
+    };
+
+    var add_node = function (node) {
+        var pid = node.pid;
+        var id = node.id;
+        var name = node.name;
+        var new_node = null;
+        if (pid != "") {
+            var p_node = $('a[id="pid"]').parent();
+            new_node = _Tree.addTo(p_node, {
+                caption: name,
+                html: "<a id='" + id + "'></a>",
+                icon: '<span class="' + node.icon + '"></span>'
+            });
+        } else {
+            new_node = _Tree.addTo(null, {
+                caption: name === "root" ? "User Root" : name,
+                html: "<a id='" + id + "'></a>",
+                icon: '<span class="' + node.icon + '"></span>'
+            });
+        }
+        $(new_node).data("files", node.data);
+        for (var i = 0; i < node.childes.length; i++) {
+            add_node(node.childes[i]);
+        }
+    };
+    var node_click = function (e) {
+        current_tree_id = $('#_tree').find('.current').find('a').attr('id');
+        var files = $('#_tree').find('.current').data('files');
     };
     var add_tree_node = function (pid, name, icon) {
         var rest_node = new RestQueryAjax(addnode_callback);
@@ -88,12 +126,12 @@ define(function (require) {
             "uid": uid,
             "pid": pid,
             "name": name,
-            "icon": icon == "" ? 'mif-folder' : icon
+            "icon": icon
         };
         rest_node.add_node_REST(data);
 
         function addnode_callback(res) {
-            if (res.response.status == 200) {
+            if (res.response.status === 200) {
 
             }
         }
@@ -107,7 +145,7 @@ define(function (require) {
         rest_node.del_node_REST(data);
 
         function delnode_callback(res) {
-            if (res.response.status == 200) {
+            if (res.response.status === 200) {
 
             }
         }
@@ -116,16 +154,15 @@ define(function (require) {
     function open_dialog(dia_type) {
         var html_content = "";
         var title = "";
-        if (dia_type == "addnode") {
+        var ok_status = false;
+        if (dia_type === "add_node") {
             html_content = "<div><input id='node_name' data-prepend='<a>Node Name:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
-            html_content += "<input id='node_icon' data-prepend='<a>Icon:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
+            html_content += "<input id='node_icon' data-prepend='<a>Node Icon:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
             html_content += "<div style='height: 100px;overflow-x:hidden'>";
             html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
             html_content += "</ul></div></div>";
             title = "Add New Node";
         }
-
-
         Metro.dialog.create({
             title: title,
             content: html_content,
@@ -133,21 +170,30 @@ define(function (require) {
             actions: [
                 {
                     caption: "<span class='mif-checkmark'></span> OK",
-                    cls: "js-dialog-close alert",
+                    cls: "alert",
                     onclick: function () {
-                        alert("You clicked Agree action");
+                        var name = $('#node_name').val();
+                        if (!name) {
+                            alert('Please define the node name!');
+                        } else if (!current_tree_id || current_tree_id === "") {
+                            alert('Please select the parent node to insert!');
+                        } else {
+                            Metro.dialog.close($('.dialog'));
+                            ok_status = true;
+                        }
                     }
                 },
                 {
                     caption: "<span class='mif-cross'></span> Cancel",
-                    cls: "js-dialog-close",
-                    onclick: function () {
-                        alert("You clicked Disagree action");
-                    }
+                    cls: "js-dialog-close"
                 }
             ],
             onClose: function (e) {
-
+                if (ok_status) {
+                    var name = $('#node_name').val();
+                    var icon = $('#node_icon').val() ? 'mif-' + $('#node_icon').val() : 'mif-folder';
+                    add_tree_node(current_tree_id, name, icon);
+                }
             },
             onOpen: function (e) {
                 buildIconPanel();
@@ -161,7 +207,7 @@ define(function (require) {
         var lv = $('#icons');
 
         function icons_callback(res) {
-            if (res.response.status == 200) {
+            if (res.response.status === 200) {
                 icons_list = res.response.element;
                 for (var key in icons_list) {
                     var cat_node = lv.data('listview').addGroup({
@@ -176,6 +222,7 @@ define(function (require) {
                             })
                         }
                     }
+                    lv.data('listview').toggleNode(cat_node);
                 }
                 lv.data('listview').options.onNodeClick = function icon_node_click(e, le) {
                     $('#node_icon').val(e[0].innerText);
@@ -198,7 +245,7 @@ define(function (require) {
     }
 
     function tool_status(able, status) {
-        if (able == 'all') {
+        if (able === 'all') {
             $('.mif-spinner4').parent().attr("disabled", status);
             $('.mif-tree').parent().attr("disabled", status);
             $('.mif-cog').parent().attr("disabled", status);

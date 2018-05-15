@@ -89,7 +89,8 @@
                     inputScript("jquery/jquery.scrollTo.min.js");
                     break;
                 case 'jq-dateTables':
-                    inputScript("jquery/jquery.dataTables.min.js");
+                    inputScript("jquery/jquery.datatables.min.js");
+                    inputCSS("jquery/css/jquery.datatables.min.css");
                     break;
                 case 'bootstrap':
                     inputScript("bootstrap/bootstrap.min.js");

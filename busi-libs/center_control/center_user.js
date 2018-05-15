@@ -1,5 +1,8 @@
 define(function (require) {
-    var uid, role, current_tree_id, _Tree;
+    var uid, role, current_tree_id = "", _Tree;
+
+    var table = require('busi-libs/center_control/file_manage');
+
     var init = function () {
         uid = getQueryString('uid');
         role = getQueryString('role');
@@ -9,6 +12,7 @@ define(function (require) {
         setHtmlFrame();
         get_user_tree();
     };
+
     var setHtmlFrame = function () {
         var html = '<div class="d-flex pt-2"><div class="pos-relative">';
         html += '<button class="button"><span class="mif-tree"></span> CreateTree</button> ';
@@ -17,8 +21,9 @@ define(function (require) {
         html += '<button class="button"><span class="mif-cross"></span> DeleteNode</button> ';
         html += '<button class="button"><span class="mif-upload"></span> UploadFile</button> ';
         html += '<button class="button"><span class="mif-spinner4"></span> Refresh</button> ';
-        html += '</div></div><div class=\'place-left mw-25 h-100 pt-2 user_tree\'></div>';
-        html += '<div class=\'place-right mw-75 h-100 pt-2\'></div>';
+        html += '</div></div><div class=\'place-left w-25 mt-5 border-left-right bd-cyan border-size-2 user_tree\'></div>';
+        html += '<div class=\'place-left ml-20 w-65 h-100 mt-5\'>';
+        html += '<table id="file_list" style="width:100%;text-align: center"></table></div>';
         $('.navview-content').html(html);
         tool_status('all', true);
         $('.mif-spinner4').parent().click(get_user_tree);
@@ -26,8 +31,19 @@ define(function (require) {
         $('.mif-plus').parent().click(function () {
             open_dialog('add_node');
         });
-        $('.mif-cross').parent().click(del_tree_node);
+        $('.mif-cross').parent().click(function () {
+            open_dialog('del_node');
+        });
+        $('.mif-cog').parent().click(function () {
+            if (current_tree_id !== "") {
+                open_dialog('modify_node');
+            } else {
+                Metro.toast.create("Please select a node to modify!", null, 5000, "bg-red fg-white");
+            }
+        });
+        table.init();
     };
+
     var logout_func = function () {
         var rest_logout = new RestQueryAjax(logout_callback);
         var data = {
@@ -41,6 +57,7 @@ define(function (require) {
             }
         }
     };
+
     var create_user_tree = function () {
         $('.user_tree').html('<ul data-role="treeview" id="_tree"></ul>');
         var rest_tree = new RestQueryAjax(createtree_callback);
@@ -57,7 +74,7 @@ define(function (require) {
                     icon: '<span class=\'mif-tree\'></span>',
                     html: "<a id='" + res.response.element.id + "'></a>"
                 });
-                _Tree.onNodeClick = node_click;
+                _Tree.options.onNodeClick = node_click;
                 tool_status('all', false);
                 tool_status('mif-tree', true);
             } else if (res.response.status === 300) {
@@ -68,6 +85,7 @@ define(function (require) {
             }
         }
     };
+
     var get_user_tree = function () {
         $('.user_tree').html('<ul data-role="treeview" data-select-node=\'true\' id="_tree"></ul>');
         var rest_tree = new RestQueryAjax(gettree_callback);
@@ -78,8 +96,9 @@ define(function (require) {
 
         function gettree_callback(res) {
             if (res.response.status === 200) {
+                current_tree_id = "";
                 _Tree = $('#_tree').data('treeview');
-                _Tree.onNodeClick = node_click;
+                _Tree.options.onNodeClick = node_click;
                 add_node(res.response.element);
                 tool_status('all', false);
                 tool_status('mif-tree', true);
@@ -92,13 +111,65 @@ define(function (require) {
         }
     };
 
-    var add_node = function (node) {
+    var add_tree_node = function (pid, name, icon) {
+        var rest_node = new RestQueryAjax(addnode_callback);
+        var data = {
+            "uid": uid,
+            "pid": pid,
+            "name": name,
+            "icon": icon
+        };
+        rest_node.add_node_REST(data);
+
+        function addnode_callback(res) {
+            if (res.response.status === 200) {
+                add_node(res.response.element);
+            }
+        }
+    };
+
+    var del_tree_node = function (sid) {
+        var rest_node = new RestQueryAjax(delnode_callback);
+        var data = {
+            "uid": uid,
+            "sid": sid
+        };
+        rest_node.del_node_REST(data);
+
+        function delnode_callback(res) {
+            if (res.response.status === 200) {
+                var delcount = res.response.element.delete_count;
+                Metro.toast.create("Total delete " + delcount[0] + " nodes and " + delcount[1] + " files", null, 5000, "bg-green fg-white");
+                get_user_tree();
+                current_tree_id = "";
+            }
+        }
+    };
+
+    var modify_tree_node = function (sid, name, icon) {
+        var rest_node = new RestQueryAjax(modifynode_callback);
+        var data = {
+            "uid": uid,
+            "sid": sid,
+            "name": name,
+            "icon": icon
+        };
+        rest_node.rename_node_REST(data);
+
+        function modifynode_callback(res) {
+            if (res.response.status === 200) {
+                get_user_tree();
+            }
+        }
+    };
+
+    function add_node(node) {
         var pid = node.pid;
         var id = node.id;
         var name = node.name;
         var new_node = null;
-        if (pid != "") {
-            var p_node = $('a[id="pid"]').parent();
+        if (pid !== "") {
+            var p_node = $('a[id="' + pid + '"]').parent();
             new_node = _Tree.addTo(p_node, {
                 caption: name,
                 html: "<a id='" + id + "'></a>",
@@ -112,44 +183,17 @@ define(function (require) {
             });
         }
         $(new_node).data("files", node.data);
-        for (var i = 0; i < node.childes.length; i++) {
-            add_node(node.childes[i]);
+        if (node.hasOwnProperty('childes')) {
+            for (var i = 0; i < node.childes.length; i++) {
+                add_node(node.childes[i]);
+            }
         }
-    };
-    var node_click = function (e) {
+    }
+
+    function node_click(e) {
         current_tree_id = $('#_tree').find('.current').find('a').attr('id');
         var files = $('#_tree').find('.current').data('files');
-    };
-    var add_tree_node = function (pid, name, icon) {
-        var rest_node = new RestQueryAjax(addnode_callback);
-        var data = {
-            "uid": uid,
-            "pid": pid,
-            "name": name,
-            "icon": icon
-        };
-        rest_node.add_node_REST(data);
-
-        function addnode_callback(res) {
-            if (res.response.status === 200) {
-
-            }
-        }
-    };
-    var del_tree_node = function (sid) {
-        var rest_node = new RestQueryAjax(delnode_callback);
-        var data = {
-            "uid": uid,
-            "sid": sid
-        };
-        rest_node.del_node_REST(data);
-
-        function delnode_callback(res) {
-            if (res.response.status === 200) {
-
-            }
-        }
-    };
+    }
 
     function open_dialog(dia_type) {
         var html_content = "";
@@ -162,43 +206,118 @@ define(function (require) {
             html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
             html_content += "</ul></div></div>";
             title = "Add New Node";
-        }
-        Metro.dialog.create({
-            title: title,
-            content: html_content,
-            width: 500,
-            actions: [
-                {
-                    caption: "<span class='mif-checkmark'></span> OK",
-                    cls: "alert",
-                    onclick: function () {
-                        var name = $('#node_name').val();
-                        if (!name) {
-                            alert('Please define the node name!');
-                        } else if (!current_tree_id || current_tree_id === "") {
-                            alert('Please select the parent node to insert!');
-                        } else {
-                            Metro.dialog.close($('.dialog'));
-                            ok_status = true;
+            Metro.dialog.create({
+                title: title,
+                content: html_content,
+                width: 500,
+                actions: [
+                    {
+                        caption: "<span class='mif-checkmark'></span> OK",
+                        cls: "alert",
+                        onclick: function () {
+                            var name = $('#node_name').val();
+                            if (!name) {
+                                alert('Please define the node name!');
+                            } else if (!current_tree_id || current_tree_id === "") {
+                                alert('Please select the parent node to insert!');
+                            } else {
+                                Metro.dialog.close($('.dialog'));
+                                ok_status = true;
+                            }
                         }
+                    },
+                    {
+                        caption: "<span class='mif-cross'></span> Cancel",
+                        cls: "js-dialog-close"
+                    }
+                ],
+                onClose: function (e) {
+                    if (ok_status) {
+                        var name = $('#node_name').val();
+                        var icon = $('#node_icon').val() ? 'mif-' + $('#node_icon').val() : 'mif-folder';
+                        add_tree_node(current_tree_id, name, icon);
                     }
                 },
-                {
-                    caption: "<span class='mif-cross'></span> Cancel",
-                    cls: "js-dialog-close"
+                onOpen: function (e) {
+                    buildIconPanel();
                 }
-            ],
-            onClose: function (e) {
-                if (ok_status) {
-                    var name = $('#node_name').val();
-                    var icon = $('#node_icon').val() ? 'mif-' + $('#node_icon').val() : 'mif-folder';
-                    add_tree_node(current_tree_id, name, icon);
+            });
+        } else if (dia_type === "del_node") {
+            html_content += "<div>Are you sure to delete the selected node? This operation will delete all child nodes and files</div>";
+            title = "Delete Node";
+            Metro.dialog.create({
+                title: title,
+                content: html_content,
+                width: 500,
+                actions: [
+                    {
+                        caption: "Agree",
+                        cls: "js-dialog-close alert",
+                        onclick: function () {
+                            if (!current_tree_id || current_tree_id === "") {
+                                Metro.toast.create("Please select a node to delete!", null, 5000, "bg-red fg-white");
+                            } else {
+                                ok_status = true;
+                            }
+                        }
+                    },
+                    {
+                        caption: "<span class='mif-cross'></span> Cancel",
+                        cls: "js-dialog-close"
+                    }
+                ],
+                onClose: function (e) {
+                    if (ok_status) {
+                        del_tree_node(current_tree_id);
+                    }
                 }
-            },
-            onOpen: function (e) {
-                buildIconPanel();
-            }
-        });
+            });
+        } else if (dia_type === "modify_node") {
+            html_content = "<div><input id='node_name' data-prepend='<a>Node Name:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
+            html_content += "<input id='node_icon' data-prepend='<a>Node Icon:</a>' data-role=\"input\" type=\"text\"><hr class=\"thin mt-1 mb-1\">";
+            html_content += "<div style='height: 100px;overflow-x:hidden'>";
+            html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
+            html_content += "</ul></div></div>";
+            title = "Modify Node";
+            Metro.dialog.create({
+                title: title,
+                content: html_content,
+                width: 500,
+                actions: [
+                    {
+                        caption: "<span class='mif-checkmark'></span> OK",
+                        cls: "alert",
+                        onclick: function () {
+                            var name = $('#node_name').val();
+                            if (!name) {
+                                alert('Please define the node name!');
+                            } else if (!current_tree_id || current_tree_id === "") {
+                                alert('Please select the parent node to modify!');
+                            } else {
+                                Metro.dialog.close($('.dialog'));
+                                ok_status = true;
+                            }
+                        }
+                    },
+                    {
+                        caption: "<span class='mif-cross'></span> Cancel",
+                        cls: "js-dialog-close"
+                    }
+                ],
+                onClose: function (e) {
+                    if (ok_status) {
+                        var name = $('#node_name').val();
+                        var icon = $('#node_icon').val() ? 'mif-' + $('#node_icon').val() : 'mif-folder';
+                        modify_tree_node(current_tree_id, name, icon);
+                    }
+                },
+                onOpen: function (e) {
+                    buildIconPanel();
+                    $('#node_name').val($('#' + current_tree_id).parent().find('.caption').html());
+                    $('#node_icon').val($('#' + current_tree_id).parent().find('.icon').find('span').attr('class').replace('mif-', ''));
+                }
+            });
+        }
     }
 
     function buildIconPanel() {
@@ -208,7 +327,7 @@ define(function (require) {
 
         function icons_callback(res) {
             if (res.response.status === 200) {
-                icons_list = res.response.element;
+                var icons_list = res.response.element;
                 for (var key in icons_list) {
                     var cat_node = lv.data('listview').addGroup({
                         caption: key

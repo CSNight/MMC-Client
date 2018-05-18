@@ -1,7 +1,7 @@
 define(function (require) {
     var uid, role, current_tree_id = "", _Tree;
 
-    var table = require('busi-libs/center_control/file_manage');
+    var File_table = require('busi-libs/center_control/file_manage');
 
     var init = function () {
         uid = getQueryString('uid');
@@ -15,12 +15,12 @@ define(function (require) {
 
     var setHtmlFrame = function () {
         var html = '<div class="d-flex pt-2"><div class="pos-relative">';
-        html += '<button class="button"><span class="mif-tree"></span> CreateTree</button> ';
-        html += '<button class="button"><span class="mif-plus"></span> AddNode</button> ';
-        html += '<button class="button"><span class="mif-cog"></span> ModifyNode</button> ';
-        html += '<button class="button"><span class="mif-cross"></span> DeleteNode</button> ';
-        html += '<button class="button"><span class="mif-upload"></span> UploadFile</button> ';
-        html += '<button class="button"><span class="mif-spinner4"></span> Refresh</button> ';
+        html += '<button class="button drop-shadow success"><span class="mif-tree"></span> CreateTree</button> ';
+        html += '<button class="button drop-shadow info"><span class="mif-plus"></span> AddNode</button> ';
+        html += '<button class="button drop-shadow warning"><span class="mif-cog"></span> ModifyNode</button> ';
+        html += '<button class="button drop-shadow alert"><span class="mif-cross"></span> DeleteNode</button> ';
+        html += '<button class="button drop-shadow yellow"><span class="mif-upload"></span> UploadFile</button> ';
+        html += '<button class="button drop-shadow light"><span class="mif-spinner4"></span> Refresh</button> ';
         html += '</div></div><div class=\'place-left w-25 mt-5 border-left-right bd-cyan border-size-2 user_tree\'></div>';
         html += '<div class=\'place-left ml-20 w-65 h-100 mt-5\'>';
         html += '<table id="file_list" style="width:100%;text-align: center"></table></div>';
@@ -41,7 +41,14 @@ define(function (require) {
                 Metro.toast.create("Please select a node to modify!", null, 5000, "bg-red fg-white");
             }
         });
-        table.init();
+        $('.mif-upload').parent().click(function () {
+            if (current_tree_id !== "") {
+                File_table.Upload(current_tree_id);
+            } else {
+                Metro.toast.create("Please select a node to save files!", null, 5000, "bg-red fg-white");
+            }
+        });
+        File_table.init();
     };
 
     var logout_func = function () {
@@ -193,6 +200,7 @@ define(function (require) {
     function node_click(e) {
         current_tree_id = $('#_tree').find('.current').find('a').attr('id');
         var files = $('#_tree').find('.current').data('files');
+        File_table.setRows(files, current_tree_id);
     }
 
     function open_dialog(dia_type) {
@@ -205,7 +213,7 @@ define(function (require) {
             html_content += "<div style='height: 100px;overflow-x:hidden'>";
             html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
             html_content += "</ul></div></div>";
-            title = "Add New Node";
+            title = "<span class='mif-tree mr-4'></span>Add New Node";
             Metro.dialog.create({
                 title: title,
                 content: html_content,
@@ -244,7 +252,7 @@ define(function (require) {
             });
         } else if (dia_type === "del_node") {
             html_content += "<div>Are you sure to delete the selected node? This operation will delete all child nodes and files</div>";
-            title = "Delete Node";
+            title = "<span class='mif-warning mr-4'></span>Delete Node";
             Metro.dialog.create({
                 title: title,
                 content: html_content,
@@ -278,7 +286,7 @@ define(function (require) {
             html_content += "<div style='height: 100px;overflow-x:hidden'>";
             html_content += "<ul data-role='listview' id='icons' data-select-node='true' data-view='list'>";
             html_content += "</ul></div></div>";
-            title = "Modify Node";
+            title = "<span class='mif-cogs mr-4'></span>Modify Node";
             Metro.dialog.create({
                 title: title,
                 content: html_content,
@@ -317,6 +325,8 @@ define(function (require) {
                     $('#node_icon').val($('#' + current_tree_id).parent().find('.icon').find('span').attr('class').replace('mif-', ''));
                 }
             });
+        } else if (dia_type === "upload") {
+
         }
     }
 

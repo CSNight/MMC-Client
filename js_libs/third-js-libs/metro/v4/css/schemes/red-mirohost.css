@@ -108,6 +108,11 @@ textarea.focused,
   background-color: #B00015;
   color: #ffffff;
 }
+
+.input .backend {
+  background-color: #B00015;
+  color: #ffffff;
+}
 .input input,
 .select input,
 .textarea input,

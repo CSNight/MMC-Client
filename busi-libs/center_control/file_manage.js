@@ -1,6 +1,7 @@
-define(function (require) {
+define(function () {
     var uid, role, _msfTable, unique_id;
     var _FileList = {};
+
     var init = function () {
         uid = getQueryString('uid');
         role = getQueryString('role');
@@ -8,6 +9,7 @@ define(function (require) {
         $('#userrole').attr('name', uid);
         setHtmlFrame();
     };
+
     var setHtmlFrame = function () {
         _msfTable = $('#file_list').DataTable({
             columns: [
@@ -35,6 +37,7 @@ define(function (require) {
         });
         _msfTable.rows().remove().draw();
     };
+
     var setTableRows = function (data, sid) {
         var files = [];
         _msfTable.rows().remove().draw();
@@ -55,6 +58,23 @@ define(function (require) {
         $('#file_list tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
         });
+        bindEvent(sid);
+        $('.paginate_button').click(function () {
+            bindEvent(sid);
+        });
+    };
+
+    var clear = function () {
+        _msfTable.rows().remove().draw();
+    };
+
+    var uploadFiles = function (sid) {
+        uploadDialog(sid);
+    };
+
+    var bindEvent = function (sid) {
+        $(".down").unbind();
+        $(".del").unbind();
         $(".down").click(function () {
             var fid = $(this).attr('name');
             if (!fid) {
@@ -85,13 +105,11 @@ define(function (require) {
                 if (res.response.status === 101) {
                     alert("File doesn't exist!");
                 } else if (res.response.status === 200) {
-                    $('#' + sid).parent().find('.caption').click();
+                    $('.mif-spinner4').attr('name', 'true');
+                    $('.mif-spinner4').parent().trigger('click');
                 }
             }
         });
-    };
-    var uploadFiles = function (sid) {
-        uploadDialog(sid);
     };
 
     function uploadDialog(sid) {
@@ -144,8 +162,8 @@ define(function (require) {
 
                 function add_file_callback(res) {
                     if (res.response.status === 200) {
+                        $('.mif-spinner4').attr('name', 'true');
                         $('.mif-spinner4').parent().trigger('click');
-                        $('#' + sid).parent().find('.caption').click();
                     }
                 }
             },
@@ -174,8 +192,6 @@ define(function (require) {
         });
     }
 
-
-    // 批量图片上传
     function buttonMultiUpload(accept) {
         var html = '<input id="get_files" type="file" multiple="multiple" style="display:none" accept="' + accept + '/*" />';
         $(html).insertAfter($('#f_selector'));
@@ -380,7 +396,8 @@ define(function (require) {
     return {
         'init': init,
         'setRows': setTableRows,
-        'Upload': uploadFiles
+        'Upload': uploadFiles,
+        'clear': clear
     }
 })
 ;

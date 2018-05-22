@@ -14,7 +14,7 @@
 <script src="../busi-libs/ServicesRestAjax.js"></script>
 <script type="text/javascript">
     require.config({
-        baseUrl:'../',
+        baseUrl: '../',
         paths: {"main": "busi-libs/center_control/main"}
     });
     require(['main'], function (control) {
@@ -23,7 +23,6 @@
 </script>
 <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-mirohost.css" rel="stylesheet">
 <div class="mw-100 h-auto">
-
     <div class="pos-relative app-bar-expand-md z-dropdown" data-role="appbar">
         <a href="javascript:;" class="brand no-hover text-bold"><span class="mif-yelp"></span>MMC</a>
         <ul class="app-bar-menu">
@@ -49,51 +48,6 @@
 <div class="mw-100 h-90">
     <div data-role="navview" data-compact="md" data-expanded="lg" data-toggle="#pane-toggle">
         <nav class="navview-pane">
-            <button class="pull-button">
-                <span class="mif-menu fg-light"></span>
-            </button>
-            <div class="suggest-box">
-                <input data-role="search" data-clear-button="false"
-                       data-search-button-icon="<span class='mif-search fg-light'></span>">
-                <button class="holder">
-                    <span class="mif-search fg-light"></span>
-                </button>
-            </div>
-            <ul class="navview-menu">
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-home"></span></span><span class="caption">Home</span>
-                    </a>
-                </li>
-                <li class="item-separator"></li>
-                <li class="item-header">Collections</li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-image"></span></span><span class="caption">Images</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-music"></span></span><span class="caption">Music</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-video-camera"></span></span><span
-                            class="caption">Video</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-books"></span></span><span class="caption">Documents</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <span class="icon"><span class="mif-folder"></span></span><span class="caption">Packages</span>
-                    </a>
-                </li>
-            </ul>
         </nav>
         <div class="navview-content pl-4-md pr-4-md">
         </div>

@@ -21,12 +21,25 @@ define(function (require) {
         html += '<button class="button drop-shadow alert"><span class="mif-cross"></span> DeleteNode</button> ';
         html += '<button class="button drop-shadow yellow"><span class="mif-upload"></span> UploadFile</button> ';
         html += '<button class="button drop-shadow light"><span class="mif-spinner4"></span> Refresh</button> ';
-        html += '</div></div><div class=\'place-left w-25 mt-5 border-left-right bd-cyan border-size-2 user_tree\'></div>';
+        html += '</div></div><div class=\'place-left w-25 mt-5 border-left-right bd-cyan border-size-2 h-vh-100 user_tree\'></div>';
         html += '<div class=\'place-left ml-20 w-65 h-100 mt-5\'>';
         html += '<table id="file_list" style="width:100%;text-align: center;font-size:13px"></table></div>';
         $('.navview-content').html(html);
         tool_status('all', true);
-        $('.mif-spinner4').parent().click(get_user_tree);
+        $('.mif-spinner4').parent().click(function (event) {
+            var tid = $('#_tree').find('.current').find('a').attr('id');
+            File_table.clear();
+            get_user_tree(function () {
+                if (tid !== undefined && $('.mif-spinner4').attr('name') === "true") {
+                    $('#' + tid).parent().find('.caption').click();
+                }
+                $('.mif-spinner4').attr('name', 'false');
+            });
+        });
+        $('#home').click(function () {
+            File_table.clear();
+            get_user_tree();
+        });
         $('.mif-tree').parent().click(create_user_tree);
         $('.mif-plus').parent().click(function () {
             open_dialog('add_node');
@@ -97,7 +110,7 @@ define(function (require) {
         }
     };
 
-    var get_user_tree = function () {
+    var get_user_tree = function (callback) {
         $('.user_tree').html('<ul data-role="treeview" data-select-node=\'true\' id="_tree"></ul>');
         var rest_tree = new RestQueryAjax(gettree_callback);
         var data = {
@@ -118,6 +131,9 @@ define(function (require) {
                 tool_status('mif-tree', false);
             } else if (res.response.status === 501) {
                 logout_func();
+            }
+            if (callback !== undefined) {
+                callback();
             }
         }
     };

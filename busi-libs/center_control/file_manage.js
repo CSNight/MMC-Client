@@ -1,5 +1,5 @@
 define(function (require) {
-    var uid, role, _msfTable;
+    var uid, role, _msfTable, unique_id;
     var _FileList = {};
     var init = function () {
         uid = getQueryString('uid');
@@ -15,19 +15,19 @@ define(function (require) {
                 {
                     "data": "file_name",
                     "render": function (data, type, full, meta) {
-                        return '<a href="' + data + '">' + data + '</a>';
+                        return '<a id="' + data + '">' + data + '</a>';
                     },
                     "title": "File Name",
                     "width": "400px"
                 },
                 {"data": 'file_type', "title": "File Type", "width": "100px"},
                 {"data": "file_size", "title": "File Size(MB)", "width": "150px"},
-                {"data": "create_time", "title": "Upload Date", "width": "200px", "type": "date"},
+                {"data": "create_time", "title": "Upload Date", "width": "270px", "type": "date"},
                 {
-                    "data": "btn", "title": "Operation", "width": "200px",
+                    "data": "btn", "title": "Operation", "width": "100px",
                     "render": function (data, type, full, meta) {
-                        var html = '<a id="' + data + '" href="javascript:;" class="down"><span class="mif-download ml-4"></span></a>';
-                        html += '<a id="' + data + '" href="javascript:;" class="del"><span class="mif-bin ml-4"></span></a>';
+                        var html = '<a name="' + data + '" href="javascript:;" class="down fg-yellow"><span class="mif-download ml-4"></span></a>';
+                        html += '<a name="' + data + '" href="javascript:;" class="del fg-yellow"><span class="mif-bin ml-4"></span></a>';
                         return html;
                     }
                 }
@@ -46,35 +46,30 @@ define(function (require) {
                 "file_name": data[i].file_name,
                 "file_type": data[i].f_type,
                 "file_size": data[i].file_size,
-                "create_time": data[i].create_time,
+                "create_time": new Date(Math.round(data[i].create_time * 1000)).toLocaleString(),
                 "btn": data[i].fid
             };
-            files.append(tmp);
+            files.push(tmp);
         }
         _msfTable.rows.add(files).draw(false);
         $('#file_list tbody').on('click', 'tr', function () {
             $(this).toggleClass('selected');
         });
-        $('a[class="down"]').click(function () {
-            var fid = $(this).attr('id');
+        $(".down").click(function () {
+            var fid = $(this).attr('name');
             if (!fid) {
                 return;
             }
-            var data = {
-                uid: uid,
-                fid: fid
-            };
-            var rest_down = new RestQueryAjax(download_callback);
-            rest_down.download_file_REST(data);
-
-            function download_callback(res) {
-                if (res.response.status === 101) {
-                    alert("File doesn't exist!");
-                }
-            }
+            $('#do_').remove();
+            var download_html = '<form id="do_" style="display: none" method="post" action="' + UrlConfig.getBaseURI() + 'file/download">';
+            download_html += '<input name="uid" value="' + uid + '">';
+            download_html += '<input name="fid" value="' + fid + '">';
+            download_html += '</form>';
+            $('body').append(download_html);
+            $('#do_').submit();
         });
-        $('a[class="del"]').click(function () {
-            var fid = $(this).attr('id');
+        $(".del").click(function () {
+            var fid = $(this).attr('name');
             if (!fid) {
                 return;
             }
@@ -89,21 +84,24 @@ define(function (require) {
             function del_callback(res) {
                 if (res.response.status === 101) {
                     alert("File doesn't exist!");
+                } else if (res.response.status === 200) {
+                    $('#' + sid).parent().find('.caption').click();
                 }
             }
         });
     };
     var uploadFiles = function (sid) {
-        uploadDialog();
+        uploadDialog(sid);
     };
 
-    function uploadDialog() {
+    function uploadDialog(sid) {
         var html = '<select id="f_type" data-role="select" data-prepend="File Type" class="mt-2 mb-2"><option id="image">Image</option>';
         html += '<option id="audio">Music</option><option id="video">Video</option><option id="doc">Document</option>';
         html += '<option id="package">Package</option></select>';
         html += '<button id="f_selector" class="button mr-2" disabled><span class="mif-folder"></span></button>';
         html += '<button id="f_uploader" class="button" disabled><span class="mif-upload"></span></button>';
-        html += '<input id="transform" class="place-right" type="checkbox" data-role="checkbox" data-caption="Media Type Transform" disabled>';
+        html += '<input id="transform" class="place-right" type="checkbox" data-role="checkbox" data-caption="Media Type Transform" data-hint-text="make media online type" disabled>';
+        html += '<div id="op_status" class="fg-cyan"></div>';
         html += '<div id="_list" style="overflow-y: auto;overflow-x: hidden;margin-top: 10px"></div>';
         Metro.dialog.create({
             title: "<span class='mif-upload mr-4'></span>Upload Files",
@@ -115,7 +113,9 @@ define(function (require) {
                     cls: "alert",
                     onclick: function () {
                         if ($('.progress__bar--blue').length === $('.progresss').length) {
-
+                            $('.js-dialog-close').attr("disabled", false);
+                            $('#op_status').html('Waiting for process transform and save');
+                            after_upload_process($('#f_type')[0].options[$('#f_type')[0].selectedIndex].id)
                         } else {
                             alert("Please wait for upload complete")
                         }
@@ -127,13 +127,35 @@ define(function (require) {
                 }
             ],
             onClose: function (e) {
+                var data = {
+                    'uid': uid,
+                    'unique_id': unique_id,
+                    'sid': sid,
+                    'f_type': $('#f_type')[0].options[$('#f_type')[0].selectedIndex].id,
+                    'description': ''
+                };
+                var cut = {};
+                for (var t in _FileList) {
+                    cut[_FileList[t]['path']] = _FileList[t]['des']
+                }
+                data['description'] = JSON.stringify(cut);
+                var add_file = new RestQueryAjax(add_file_callback);
+                add_file.add_file_REST(data);
 
+                function add_file_callback(res) {
+                    if (res.response.status === 200) {
+                        $('.mif-spinner4').parent().trigger('click');
+                        $('#' + sid).parent().find('.caption').click();
+                    }
+                }
             },
             onOpen: function (e) {
                 var t_selector = $('#f_type');
                 var f_selector = $('#f_selector');
+                $('#op_status').html('');
                 t_selector[0].selectedIndex = -1;
                 t_selector.change(function (e) {
+                    $('#op_status').html('Waiting for select files');
                     $('#transform').prop('checked', false);
                     if (t_selector[0].selectedIndex === 2 || t_selector[0].selectedIndex === 1) {
                         $('#transform').data('checkbox').toggleState();
@@ -170,6 +192,7 @@ define(function (require) {
                 return;
             }
             _FileList = {};
+            unique_id = guid();
             console.log(file_box[0].files);
             file_size_type_check(accept, file_box[0]);
             file_upload_list(accept);
@@ -230,15 +253,18 @@ define(function (require) {
         $('#f_uploader')[0].disabled = $('.progresss').length <= 0;
         $('#f_uploader').unbind();
         $('#f_uploader').click(function () {
+            $('#op_status').html('Waiting for upload files');
             for (var key in _FileList) {
                 upload_exec(_FileList[key], key, accept);
             }
+            $('#f_uploader').attr("disabled", true);
+            $('.js-dialog-close').attr("disabled", true);
         });
     }
 
     function upload_exec(obj, id, accept) {
         var reader = new FileReader();
-        var step = 2 * 1024 * 1024;
+        var step = 4 * 1024 * 1024;
         var total = obj.file.size;
         var cuLoaded = 0;
         console.info("文件大小：" + obj.file.size);
@@ -285,16 +311,44 @@ define(function (require) {
             fd.append('name', obj.file.name);
             fd.append('index', startIndex);
             fd.append('f_type', accept);
+            fd.append('unique_id', unique_id);
             var xhr = new XMLHttpRequest();
             xhr.open('post', "http://127.0.0.1:5000/file/upload", true);
             xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
+                if (xhr.readyState === 4 && xhr.status === 200) {
                     if (onSuccess)
                         onSuccess();
                 }
             };
             // 开始发送
             xhr.send(fd);
+        }
+    }
+
+    function after_upload_process(f_type) {
+        var data = {
+            'f_type': f_type,
+            'is_trans': $('#transform').prop('checked'),
+            'unique_id': unique_id
+        };
+        var after_upload = new RestQueryAjax(after_callback);
+        after_upload.after_upload_REST(data);
+
+        function after_callback(res) {
+            if (res.response.status === 200) {
+                for (var i = 0; i < res.response.element.length; i++) {
+                    var l = res.response.element[i];
+                    for (var x in _FileList) {
+                        if (l.file_path.indexOf(_FileList[x].name.substr(0, _FileList[x].name.lastIndexOf('.'))) > 0) {
+                            _FileList[x]['path'] = l.file_path;
+                            _FileList[x]['des'] = l.shortcut;
+                        }
+                    }
+                }
+                Metro.dialog.close($('.dialog'));
+            } else {
+                alert('Files process failed, Please try again or redo upload the files');
+            }
         }
     }
 

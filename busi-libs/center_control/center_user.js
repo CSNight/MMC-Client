@@ -23,7 +23,7 @@ define(function (require) {
         html += '<button class="button drop-shadow light"><span class="mif-spinner4"></span> Refresh</button> ';
         html += '</div></div><div class=\'place-left w-25 mt-5 border-left-right bd-cyan border-size-2 user_tree\'></div>';
         html += '<div class=\'place-left ml-20 w-65 h-100 mt-5\'>';
-        html += '<table id="file_list" style="width:100%;text-align: center"></table></div>';
+        html += '<table id="file_list" style="width:100%;text-align: center;font-size:13px"></table></div>';
         $('.navview-content').html(html);
         tool_status('all', true);
         $('.mif-spinner4').parent().click(get_user_tree);
@@ -32,7 +32,11 @@ define(function (require) {
             open_dialog('add_node');
         });
         $('.mif-cross').parent().click(function () {
-            open_dialog('del_node');
+            if (current_tree_id !== "") {
+                open_dialog('del_node');
+            } else {
+                Metro.toast.create("Please select a node to delete!", null, 5000, "bg-red fg-white");
+            }
         });
         $('.mif-cog').parent().click(function () {
             if (current_tree_id !== "") {
@@ -197,7 +201,7 @@ define(function (require) {
         }
     }
 
-    function node_click(e) {
+    function node_click(e, t) {
         current_tree_id = $('#_tree').find('.current').find('a').attr('id');
         var files = $('#_tree').find('.current').data('files');
         File_table.setRows(files, current_tree_id);

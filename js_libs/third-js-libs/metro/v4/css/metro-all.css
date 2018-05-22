@@ -407,7 +407,6 @@ div {
 .selected::before {
   position: absolute;
   display: block;
-  content: "";
   background-color: transparent;
   border-color: #ffffff !important;
   border-left: 2px solid;

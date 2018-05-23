@@ -5,8 +5,6 @@ define(function () {
     var init = function () {
         uid = getQueryString('uid');
         role = getQueryString('role');
-        $('#userrole').html($('#userrole').html().replace('User', role));
-        $('#userrole').attr('name', uid);
         setHtmlFrame();
     };
 
@@ -119,7 +117,7 @@ define(function () {
         html += '<button id="f_selector" class="button mr-2" disabled><span class="mif-folder"></span></button>';
         html += '<button id="f_uploader" class="button" disabled><span class="mif-upload"></span></button>';
         html += '<input id="transform" class="place-right" type="checkbox" data-role="checkbox" data-caption="Media Type Transform" data-hint-text="make media online type" disabled>';
-        html += '<div id="op_status" class="fg-cyan"></div>';
+        html += '<div id="op_status" class="fg-orange"></div>';
         html += '<div id="_list" style="overflow-y: auto;overflow-x: hidden;margin-top: 10px"></div>';
         Metro.dialog.create({
             title: "<span class='mif-upload mr-4'></span>Upload Files",
@@ -130,10 +128,10 @@ define(function () {
                     caption: "<span class='mif-checkmark'></span> OK",
                     cls: "alert",
                     onclick: function () {
+                        $('button[class="button alert"]').attr('disabled', true);
                         if ($('.progress__bar--blue').length === $('.progresss').length) {
-                            $('.js-dialog-close').attr("disabled", false);
                             $('#op_status').html('Waiting for process transform and save');
-                            after_upload_process($('#f_type')[0].options[$('#f_type')[0].selectedIndex].id)
+                            after_upload_process($('#f_type')[0].options[$('#f_type')[0].selectedIndex].id, sid, save_callback);
                         } else {
                             alert("Please wait for upload complete")
                         }
@@ -144,29 +142,6 @@ define(function () {
                     cls: "js-dialog-close"
                 }
             ],
-            onClose: function (e) {
-                var data = {
-                    'uid': uid,
-                    'unique_id': unique_id,
-                    'sid': sid,
-                    'f_type': $('#f_type')[0].options[$('#f_type')[0].selectedIndex].id,
-                    'description': ''
-                };
-                var cut = {};
-                for (var t in _FileList) {
-                    cut[_FileList[t]['path']] = _FileList[t]['des']
-                }
-                data['description'] = JSON.stringify(cut);
-                var add_file = new RestQueryAjax(add_file_callback);
-                add_file.add_file_REST(data);
-
-                function add_file_callback(res) {
-                    if (res.response.status === 200) {
-                        $('.mif-spinner4').attr('name', 'true');
-                        $('.mif-spinner4').parent().trigger('click');
-                    }
-                }
-            },
             onOpen: function (e) {
                 var t_selector = $('#f_type');
                 var f_selector = $('#f_selector');
@@ -190,6 +165,31 @@ define(function () {
                 });
             }
         });
+    }
+
+    function save_callback(sid) {
+        var data = {
+            'uid': uid,
+            'unique_id': unique_id,
+            'sid': sid,
+            'f_type': $('#f_type')[0].options[$('#f_type')[0].selectedIndex].id,
+            'description': ''
+        };
+        var cut = {};
+        for (var t in _FileList) {
+            cut[_FileList[t]['path']] = _FileList[t]['des']
+        }
+        data['description'] = JSON.stringify(cut);
+        var add_file = new RestQueryAjax(add_file_callback);
+        add_file.add_file_REST(data);
+
+        function add_file_callback(res) {
+            if (res.response.status === 200) {
+                $('.mif-spinner4').attr('name', 'true');
+                $('.mif-spinner4').parent().trigger('click');
+            }
+            Metro.dialog.close($('.dialog'));
+        }
     }
 
     function buttonMultiUpload(accept) {
@@ -243,7 +243,7 @@ define(function () {
                     break;
             }
             _FileList[guid()] = {
-                name: file.name,
+                name: Trim(file.name, 'g'),
                 file: file,
                 upload: false
             };
@@ -253,7 +253,7 @@ define(function () {
     function file_upload_list(accept) {
         $('#_list').html('');
         for (var key in _FileList) {
-            var name = _FileList[key].name.substring(0, 10) + '...  Progress: ';
+            var name = _FileList[key].name.substring(0, 15) + '...  Progress: ';
             $('#_list').append('<div id="_' + key + '" class="progresss progress--active" style="width:400px;float:left">' +
                 '<b class="progress__bar"><span class="progress__text">' + name + '<em>0%</em></span></b></div>' +
                 '<span id="' + key + '" class="file_bin mif-bin float-right mt-1 mr-1"></span>');
@@ -261,11 +261,7 @@ define(function () {
                 $('#_list').height(200);
             }
         }
-        $('.file_bin').click(function () {
-            delete _FileList[$(this).attr('id')];
-            $('#_' + $(this).attr('id')).remove();
-            $(this).remove();
-        });
+        $('.file_bin').click(delete_upload_list);
         $('#f_uploader')[0].disabled = $('.progresss').length <= 0;
         $('#f_uploader').unbind();
         $('#f_uploader').click(function () {
@@ -275,7 +271,18 @@ define(function () {
             }
             $('#f_uploader').attr("disabled", true);
             $('.js-dialog-close').attr("disabled", true);
+            $('.file_bin').unbind();
+            $('#f_selector').attr("disabled", true);
         });
+    }
+
+    function delete_upload_list() {
+        delete _FileList[$(this).attr('id')];
+        $('#_' + $(this).attr('id')).remove();
+        if ($(this).siblings().length === 0) {
+            $('#f_selector').attr("disabled", false);
+        }
+        $(this).remove();
     }
 
     function upload_exec(obj, id, accept) {
@@ -324,7 +331,7 @@ define(function () {
             // 提交到服务器
             var fd = new FormData();
             fd.append('file', blob);
-            fd.append('name', obj.file.name);
+            fd.append('name', obj.name);
             fd.append('index', startIndex);
             fd.append('f_type', accept);
             fd.append('unique_id', unique_id);
@@ -341,7 +348,7 @@ define(function () {
         }
     }
 
-    function after_upload_process(f_type) {
+    function after_upload_process(f_type, sid, callback) {
         var data = {
             'f_type': f_type,
             'is_trans': $('#transform').prop('checked'),
@@ -357,13 +364,15 @@ define(function () {
                     for (var x in _FileList) {
                         if (l.file_path.indexOf(_FileList[x].name.substr(0, _FileList[x].name.lastIndexOf('.'))) > 0) {
                             _FileList[x]['path'] = l.file_path;
-                            _FileList[x]['des'] = l.shortcut;
+                            _FileList[x]['des'] = l.des;
                         }
                     }
                 }
-                Metro.dialog.close($('.dialog'));
+                callback(sid);
             } else {
                 alert('Files process failed, Please try again or redo upload the files');
+                $('.file_bin').click(delete_upload_list);
+                $('#f_selector').attr("disabled", false);
             }
         }
     }
@@ -381,13 +390,21 @@ define(function () {
         }
     }
 
+    function Trim(str, is_global) {
+        var result;
+        result = str.replace(/(^\s+)|(\s+$)/g, "").replace(/\//g, '');
+        if (is_global.toLowerCase() === "g") {
+            result = result.replace(/\s/g, "");
+        }
+        return result;
+    }
+
     function guid() {
         /**
          * @return {string}
          */
         function S4() {
-            return (((1 + Math.random()) * 0x10000) | 0).toString(16)
-                .substring(1);
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
         }
 
         return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());

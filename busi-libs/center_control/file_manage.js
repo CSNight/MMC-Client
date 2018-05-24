@@ -22,7 +22,7 @@ define(function () {
                 },
                 {"data": 'file_type', "title": "File Type", "width": "100px"},
                 {"data": "file_size", "title": "File Size(MB)", "width": "150px"},
-                {"data": "create_time", "title": "Upload Date", "width": "270px", "type": "date"},
+                {"data": "create_time", "title": "Upload Date", "width": "270px", "type": "datetime"},
                 {
                     "data": "btn", "title": "Operation", "width": "100px",
                     "render": function (data, type, full, meta) {
@@ -173,7 +173,7 @@ define(function () {
             'unique_id': unique_id,
             'sid': sid,
             'f_type': $('#f_type')[0].options[$('#f_type')[0].selectedIndex].id,
-            'description': ''
+            "description": ""
         };
         var cut = {};
         for (var t in _FileList) {

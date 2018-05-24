@@ -1,38 +1,46 @@
-define(function () {
+define(function (require) {
+    var user_tree = require('busi-libs/center_control/center_user');
     var init = function () {
         uid = getQueryString('uid');
         role = getQueryString('role');
         setHtmlFrame();
+        user_tree.init();
     };
     var setHtmlFrame = function () {
         var html = '<button class="pull-button"><span class="mif-menu fg-light"></span></button>';
         html += '<div class="suggest-box"><input data-role="search" data-clear-button="false" data-search-button-icon="<span class=\'mif-search fg-light\'></span>">';
         html += '<button class="holder"><span class="mif-search fg-light"></span></button></div>';
         html += '<ul class="navview-menu">';
-        html += '<li id="home"><a href="#"><span class="icon"><span class="mif-home"></span></span><span class="caption">Home</span> </a></li>';
+        html += '<li id="home"><a href="javascript:;"><span class="icon"><span class="mif-home"></span></span><span class="caption">Home</span> </a></li>';
         html += '<li class="item-separator"></li><li class="item-header">Collections</li>';
-        html += '<li><a href="javascript:;"><span class="icon ft" id="image"><span class="mif-image"></span></span><span class="caption">Images</span></a></li>';
-        html += '<li><a href="javascript:;"><span class="icon ft" id="audio"><span class="mif-music"></span></span><span class="caption">Music</span></a></li>';
-        html += '<li><a href="javascript:;"><span class="icon ft" id="video"><span class="mif-video-camera"></span></span><span class="caption">Video</span></a></li>';
-        html += '<li><a href="javascript:;"> <span class="icon ft" id="doc"><span class="mif-books"></span></span><span class="caption">Documents</span></a></li>';
-        html += '<li><a href="javascript:;"><span class="icon ft" id="package"><span class="mif-folder"></span></span><span class="caption">Packages</span></a></li></ul>';
+        html += '<li><a href="javascript:;"><span class="icon ft" id="image"><span class="mif-image"></span></span><span class="caption">Images<b></b></span></a></li>';
+        html += '<li><a href="javascript:;"><span class="icon ft" id="audio"><span class="mif-music"></span></span><span class="caption">Music<b></b></span></a></li>';
+        html += '<li><a href="javascript:;"><span class="icon ft" id="video"><span class="mif-video-camera"></span></span><span class="caption">Video<b></b></span></a></li>';
+        html += '<li><a href="javascript:;"> <span class="icon ft" id="doc"><span class="mif-books"></span></span><span class="caption">Documents<b></b></span></a></li>';
+        html += '<li><a href="javascript:;"><span class="icon ft" id="package"><span class="mif-folder"></span></span><span class="caption">Packages<b></b></span></a></li></ul>';
         $('.navview-pane').html(html);
-        $('.ft').each(function (index, ele) {
-            var data = {
-                'uid': uid,
-                'f_type': $(ele).attr('id'),
-                'response_t': 'count'
-            };
-            var get_count = new RestQueryAjax(get_count_callback);
-            get_count.count_file_REST(data);
-
-            function get_count_callback(res) {
-                if (res.response.status === 200) {
-                    $(ele).siblings('.caption').html($(ele).siblings('.caption').html() + '(' + res.response.element + ')');
-                }
-            }
-        });
         $('.ft').parent().click(get_collections);
+        $('.item-separator').click(refresh_file_count);
+        $('#menu_home').click(function () {
+            $('#home').click();
+        });
+    };
+    var refresh_file_count = function () {
+        var data = {
+            'uid': uid,
+            'f_type': 'all',
+            'response_t': 'count_all'
+        };
+        var get_count = new RestQueryAjax(get_count_callback);
+        get_count.count_file_REST(data);
+
+        function get_count_callback(res) {
+            if (res.response.status === 200) {
+                $('.ft').each(function (index, ele) {
+                    $(ele).siblings('.caption').find('b').html('(' + res.response.element[$(ele).attr('id')] + ')');
+                });
+            }
+        }
     };
 
     function get_collections() {

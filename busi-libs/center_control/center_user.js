@@ -132,6 +132,7 @@ define(function (require) {
             } else if (res.response.status === 501) {
                 logout_func();
             }
+            $('.item-separator').click();
             if (callback !== undefined) {
                 callback();
             }

@@ -4,7 +4,7 @@
 function Config() {
     var URLset = {
         BaseURI: "http://127.0.0.1:5000/",
-        MapURL: "http://localhost:8090/iserver/services/map-china400/rest/maps/China",
+        PreviewURI: "http://127.0.0.1:5000/trans/get_preview",
         FileURI: "http://localhost:8080/ShipAssist-Services/"
     };
     this.getUrl = function (key) {
@@ -18,8 +18,8 @@ var instance = new Config();
 UrlConfig.getBaseURI = function () {
     return instance.getUrl('BaseURI');
 };
-UrlConfig.getMapURL = function () {
-    return instance.getUrl('MapURL');
+UrlConfig.getPreviewURL = function () {
+    return instance.getUrl('PreviewURI');
 };
 UrlConfig.getFileURI = function () {
     return instance.getUrl('FileURI');
@@ -79,6 +79,9 @@ function RestQueryAjax(callback) {
     };
     this.after_upload_REST = function (data) {
         ResultGet(data, 'file', 'after_upload');
+    };
+    this.cache_file_REST = function (data) {
+        ResultGet(data, 'file', 'cache_file');
     };
     // 返回函数
     RestQueryAjax.prototype = {

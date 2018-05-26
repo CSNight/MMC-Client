@@ -10649,9 +10649,9 @@
             this.isAnimate = true;
 
             setTimeout(function () {
-                pages.animate({
-                    height: next.outerHeight(true) + 2
-                });
+                // pages.animate({
+                //     height: next.outerHeight(true) + 2
+                // });
             }, 0);
 
             pages.css("overflow", "hidden");

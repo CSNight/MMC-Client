@@ -27162,6 +27162,7 @@ html.metro-touch-device .streamer .stream.focused .stream-icon {
 .master .page {
   background-color: transparent;
   color: inherit;
+    position: relative;
 }
 .master .controls {
   display: -webkit-box;
@@ -27238,7 +27239,7 @@ html.metro-touch-device .streamer .stream.focused .stream-icon {
 }
 .master .page {
   display: block;
-  position: absolute;
+
   top: 0;
   left: 0;
   width: 100%;
@@ -27250,11 +27251,14 @@ html.metro-touch-device .streamer .stream.focused .stream-icon {
   -webkit-box-ordinal-group: 2;
       -ms-flex-order: 1;
           order: 1;
+    color: #FFFFFF;
 }
 .master .controls-bottom {
   -webkit-box-ordinal-group: 4;
       -ms-flex-order: 3;
           order: 3;
+    color: #FFFFFF;
+    display: none;
 }
 .master .pages {
   -webkit-box-ordinal-group: 3;

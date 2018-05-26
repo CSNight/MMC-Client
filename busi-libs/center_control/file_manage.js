@@ -128,8 +128,9 @@ define(function () {
                     caption: "<span class='mif-checkmark'></span> OK",
                     cls: "alert",
                     onclick: function () {
-                        $('button[class="button alert"]').attr('disabled', true);
                         if ($('.progress__bar--blue').length === $('.progresss').length) {
+                            $('button[class="button alert"]').attr('disabled', true);
+                            $('.js-dialog-close').attr("disabled", true);
                             $('#op_status').html('Waiting for process transform and save');
                             after_upload_process($('#f_type')[0].options[$('#f_type')[0].selectedIndex].id, sid, save_callback);
                         } else {
@@ -213,6 +214,7 @@ define(function () {
             file_size_type_check(accept, file_box[0]);
             file_upload_list(accept);
             $(file_box).remove();
+            $('#f_type').parent().addClass('disabled');
         });
         file_box.click();
     }
@@ -270,7 +272,6 @@ define(function () {
                 upload_exec(_FileList[key], key, accept);
             }
             $('#f_uploader').attr("disabled", true);
-            $('.js-dialog-close').attr("disabled", true);
             $('.file_bin').unbind();
             $('#f_selector').attr("disabled", true);
         });

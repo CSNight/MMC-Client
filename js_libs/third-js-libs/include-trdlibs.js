@@ -88,6 +88,9 @@
                 case 'jq-scrollTo':
                     inputScript("jquery/jquery.scrollTo.min.js");
                     break;
+                case 'jq-nicescroll':
+                    inputScript("jquery/jquery.nicescroll.min.js");
+                    break;
                 case 'jq-dateTables':
                     inputScript("jquery/jquery.datatables.min.js");
                     inputCSS("jquery/css/jquery.datatables.min.css");

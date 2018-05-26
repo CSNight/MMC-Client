@@ -1,4 +1,5 @@
 define(function (require) {
+    var uid, role;
     var user_tree = require('busi-libs/center_control/center_user');
     var init = function () {
         uid = getQueryString('uid');
@@ -22,7 +23,12 @@ define(function (require) {
         $('.ft').parent().click(get_collections);
         $('.item-separator').click(refresh_file_count);
         $('#menu_home').click(function () {
-            $('#home').click();
+            $('.navview-content').html('');
+            user_tree.init();
+        });
+        $('#home').click(function () {
+            $('.navview-content').html('');
+            user_tree.init();
         });
     };
     var refresh_file_count = function () {
@@ -74,27 +80,111 @@ define(function (require) {
                 }
             }
         }
-
     }
 
     function image_views(els) {
+        var pages = Math.ceil(els.length / 24);
+        $('.navview-content').html('<div class="wall bg-transparent" data-cls-control-prev="bg-white"' +
+            'data-control-title="page $1 of $2" data-cls-control-next="bg-white" data-cls-control-title="fg-white" data-role="master"></div>');
 
+        function add_items(page) {
+            if ($('#page' + page).find('.grid').html() !== "") {
+                return;
+            }
+            for (var i = 0; i < 3; i++) {
+                $('#page' + page).find('.grid').append('<div id="row' + i + page + '" class="row mt-2 mb-2"></div>');
+                for (var j = 0; j < 8; j++) {
+                    if (page * 24 + i * 8 + j >= els.length) {
+                        $('#row' + i + page).append('<div class="cell mr-3"></div>');
+                    } else {
+                        var img_file = els[page * 24 + i * 8 + j];
+                        var html = '<div class="cell bg-red mr-3"><div class="mb-5 img-container thumbnail pos-center">';
+                        html += '<img src="' + UrlConfig.getPreviewURL() + '?uid=' + uid + '&fid=' + img_file.fid + '&f_type=image">';
+                        html += '<div class="image-overlay"><div>Size：' + img_file.file_size + 'MB</div><div class="text-center">' + img_file.file_name + '</div></div>';
+                        html += '<div class="pos-bottom-center text-center">';
+                        html += '<span class="fg-red mif-eye mr-6 preview" name="' + img_file.fid + '"></span>';
+                        html += '<span class="fg-red mif-download download" name="' + img_file.fid + '"></span></div></div></div>';
+                        $('#row' + i + page).append(html);
+                    }
+                }
+            }
+            $('.preview').unbind();
+            $('.download').unbind();
+            $('.preview').click(function () {
+                var fid = $(this).attr('name');
+                if (!fid) {
+                    return;
+                }
+                var data = {
+                    'uid': uid,
+                    'fid': fid,
+                    'f_type': 'image'
+                };
+                var rest_cache = new RestQueryAjax(cache_callback);
+                rest_cache.cache_file_REST(data);
+
+                function cache_callback(res) {
+                    if (res.response.status === 200) {
+                        window.open(UrlConfig.getBaseURI() + 'trans/resource/image/' + res.response.element.chd + '/' + res.response.element.name);
+                    }
+                }
+            });
+            $('.download').click(function () {
+                var fid = $(this).attr('name');
+                if (!fid) {
+                    return;
+                }
+                $('#do_').remove();
+                var download_html = '<form id="do_" style="display: none" method="post" action="' + UrlConfig.getBaseURI() + 'file/download">';
+                download_html += '<input name="uid" value="' + uid + '">';
+                download_html += '<input name="fid" value="' + fid + '">';
+                download_html += '</form>';
+                $('body').append(download_html);
+                $('#do_').submit();
+            });
+            $('.cell').css('max-height', '244px');
+            $('.img-container').css('max-height', '210px');
+            $('img').css('max-height', '180px');
+        }
+
+        for (var k = 0; k < pages; k++) {
+            $('.wall').append('<div id="page' + k + '" class="page"><div class="grid"></div></div>');
+        }
+        add_items(0);
+        setTimeout(function () {
+            $('.wall').data('master').options.onBeforePage = function (dir, index, page, element) {
+                if ((index + 1) === pages && dir === 'next') {
+                    add_items(0);
+                    $('.wall').data('master').toPage(0);
+                } else if ((index + 1) < pages && dir === 'next') {
+                    $('.wall').data('master').next();
+                    add_items(index + 1);
+                } else if (index === 0 && dir === 'prev') {
+                    $('.wall').data('master').toPage(pages - 1);
+                    add_items(pages - 1);
+                } else {
+                    $('.wall').data('master').prev();
+                    add_items(index - 1);
+                }
+            };
+            $('.pages').height($('.navview-pane').height() - $('.controls-bottom').height());
+        }, 100);
     }
 
     function video_views(els) {
-
+        $('.navview-content').html('');
     }
 
     function music_views(els) {
-
+        $('.navview-content').html('');
     }
 
     function doc_views(els) {
-
+        $('.navview-content').html('');
     }
 
     function package_views(els) {
-
+        $('.navview-content').html('');
     }
 
     function getQueryString(name) {

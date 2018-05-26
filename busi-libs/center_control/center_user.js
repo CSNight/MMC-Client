@@ -8,6 +8,7 @@ define(function (require) {
         role = getQueryString('role');
         $('#userrole').html($('#userrole').html().replace('User', role));
         $('#userrole').attr('name', uid);
+        $('#logout').unbind();
         $('#logout').click(logout_func);
         setHtmlFrame();
         get_user_tree();
@@ -35,10 +36,6 @@ define(function (require) {
                 }
                 $('.mif-spinner4').attr('name', 'false');
             });
-        });
-        $('#home').click(function () {
-            File_table.clear();
-            get_user_tree();
         });
         $('.mif-tree').parent().click(create_user_tree);
         $('.mif-plus').parent().click(function () {

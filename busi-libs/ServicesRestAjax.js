@@ -83,6 +83,9 @@ function RestQueryAjax(callback) {
     this.cache_file_REST = function (data) {
         ResultGet(data, 'file', 'cache_file');
     };
+    this.convert_doc_REST = function (data) {
+        ResultGet(data, 'trans', 'office_pdf');
+    };
     // 返回函数
     RestQueryAjax.prototype = {
         callback: callback

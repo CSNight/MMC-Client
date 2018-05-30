@@ -86,6 +86,9 @@ function RestQueryAjax(callback) {
     this.convert_doc_REST = function (data) {
         ResultGet(data, 'trans', 'office_pdf');
     };
+    this.pkg_list_REST = function (data) {
+        ResultGet(data, 'trans', 'zip_list');
+    };
     // 返回函数
     RestQueryAjax.prototype = {
         callback: callback

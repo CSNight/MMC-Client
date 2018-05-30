@@ -236,7 +236,7 @@ define(function () {
                     }
                     break;
                 case "package":
-                    if (file_type !== ".zip" && file_type !== ".tar.gz" && file_type !== ".rar"
+                    if (file_type !== ".zip" && file_type !== ".gz" && file_type !== ".rar"
                         && file_type !== ".7z" && file_type !== ".exe" && file_type !== ".msi") {
                         continue;
                     }

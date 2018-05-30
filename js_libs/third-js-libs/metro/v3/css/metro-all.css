@@ -18598,8 +18598,8 @@ aside::after {
           order: 1;
 }
 .shortcut {
-  width: 6rem;
-  height: 6rem;
+    width: 4rem;
+    height: 4rem;
   padding: .5rem;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;

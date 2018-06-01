@@ -5,7 +5,7 @@ define(function (require) {
         'package': [142, 194],
         'audio': [157, 190],
         'image': [196, 225],
-        'video': [196, 150]
+        'video': [182, 189]
     };
     var user_tree = require('busi-libs/center_control/center_user');
     var init = function () {
@@ -14,6 +14,7 @@ define(function (require) {
         setHtmlFrame();
         user_tree.init();
     };
+
     var setHtmlFrame = function () {
         var html = '<button class="pull-button"><span class="mif-menu fg-light"></span></button>';
         html += '<div class="suggest-box"><input data-role="search" data-clear-button="false" data-search-button-icon="<span class=\'mif-search fg-light\'></span>">';
@@ -177,19 +178,53 @@ define(function (require) {
             var inf = get_icons(_f.file_type, _f.f_type);
             var _src = inf.p;
             if (descrp['shortcut'] !== 'UNKNOWN') {
-                _src = UrlConfig.getPreviewURL() + '?uid=' + uid + '&fid=' + descrp.shortcut + '&f_type=audio';
+                _src = UrlConfig.getPreviewURL() + '?uid=' + uid + '&fid=' + descrp.shortcut + '&f_type=video';
             }
             var html = '<div class="cell bg-cyan mr-3"><div class="mt-2 img-container thumbnail pos-top-center">';
-            html += '<img src="' + _src + '" name="' + inf.t + '">';
-            html += '<div class="image-overlay reduce-5 text-center"><div>Artist:\r\n' + descrp.artist + '</div>';
-            html += '<div class="text-center">Album:\n' + descrp.album + '</div></div></div>';
-            html += '<div class="reduce-5 pos-bottom-center text-center"><div  style="height:36px">' + _f.file_name + '</div>';
+            html += '<img src="' + _src + '" name="' + inf.t + '"></div>';
+            html += '<div class="reduce-5 pos-bottom-center text-center"><div style="height: 54px">' + _f.file_name + '</div>';
             html += '<div>Size:' + _f.file_size + 'MB</div><div name="' + _f.file_type + '">';
             html += '<span class="mif-play ani-hover-flash mr-6 play" name="' + _f.fid + '"></span>';
             html += '<span class="mif-download ani-hover-flash  download" name="' + _f.fid + '"></span></div></div></div>';
             return html
         }
 
+        function after_show() {
+            $('.play').unbind();
+            $('.download').unbind();
+            $('.play').click(function () {
+                var fid = $(this).attr('name');
+                if (!fid) {
+                    return;
+                }
+                var data = {
+                    'uid': uid,
+                    'fid': fid,
+                    'f_type': 'video'
+                };
+                var rest_cache = new RestQueryAjax(cache_callback);
+                rest_cache.cache_file_REST(data);
+                $('body').append('<div class="overlay"><div class="pos-absolute pos-center"><div data-role="activity" data-type="cycle" data-style="color"></div>Processing Cache</div></div>');
+
+                function cache_callback(res) {
+                    $('.overlay').remove();
+                    if (res.response.status === 200) {
+                        window.open(UrlConfig.getBaseURI() + 'trans/resource/video/' + res.response.element.chd + '/' + res.response.element.name);
+                    }
+                }
+            });
+            $('.download').click(function () {
+                var fid = $(this).attr('name');
+                if (!fid) {
+                    return;
+                }
+                window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
+            });
+            $('.cell').css('max-height', '186px');
+            $('img').css('max-height', '80px');
+        }
+
+        add_items(els, 0, r, c, build_html, after_show);
         setTimeout(function () {
             $('.wall').data('master').options.onBeforePage = function (dir, index, page, element) {
                 if ((index + 1) < pages && dir === 'next') {
@@ -272,8 +307,10 @@ define(function (require) {
                 };
                 var rest_cache = new RestQueryAjax(cache_callback);
                 rest_cache.cache_file_REST(data);
+                $('body').append('<div class="overlay"><div class="pos-absolute pos-center"><div data-role="activity" data-type="cycle" data-style="color"></div>Processing Cache</div></div>');
 
                 function cache_callback(res) {
+                    $('.overlay').remove();
                     if (res.response.status === 200) {
                         var _file_src = UrlConfig.getBaseURI() + 'trans/resource/audio/' + res.response.element.chd + '/' + res.response.element.name;
                     }
@@ -338,8 +375,10 @@ define(function (require) {
                     };
                     var convert_rest = new RestQueryAjax(convert_callback);
                     convert_rest.convert_doc_REST(data);
+                    $('body').append('<div class="overlay"><div class="pos-absolute pos-center"><div data-role="activity" data-type="cycle" data-style="color"></div>Processing Cache</div></div>');
 
                     function convert_callback(res) {
+                        $('.overlay').remove();
                         if (res.response.status === 200) {
                             window.open(UrlConfig.getBaseURI() + 'trans/resource/doc/' + res.response.element.chd + '/' + res.response.element.name);
                         }

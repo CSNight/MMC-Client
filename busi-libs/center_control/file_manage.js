@@ -78,13 +78,7 @@ define(function () {
             if (!fid) {
                 return;
             }
-            $('#do_').remove();
-            var download_html = '<form id="do_" style="display: none" method="post" action="' + UrlConfig.getBaseURI() + 'file/download">';
-            download_html += '<input name="uid" value="' + uid + '">';
-            download_html += '<input name="fid" value="' + fid + '">';
-            download_html += '</form>';
-            $('body').append(download_html);
-            $('#do_').submit();
+            window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
         });
         $(".del").click(function () {
             var fid = $(this).attr('name');

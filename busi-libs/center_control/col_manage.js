@@ -48,6 +48,7 @@ define(function (require) {
             }
         }, 100, true));
     };
+
     var refresh_file_count = function () {
         var data = {
             'uid': uid,
@@ -145,7 +146,7 @@ define(function (require) {
                 if (!fid) {
                     return;
                 }
-                download(fid);
+                window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
             });
             $('.cell').css('max-height', '244px');
             $('.img-container').css('max-height', '210px');
@@ -283,7 +284,7 @@ define(function (require) {
                 if (!fid) {
                     return;
                 }
-                download(fid);
+                window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
             });
             $('.cell').css('max-width', '157px');
             $('.img-container').css('max-height', '130px');
@@ -352,7 +353,7 @@ define(function (require) {
                 if (!fid) {
                     return;
                 }
-                download(fid);
+                window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
             });
             $('.cell').css('max-width', '128px');
             $('.img-container').css('max-height', '130px');
@@ -407,7 +408,7 @@ define(function (require) {
                 if (!fid) {
                     return;
                 }
-                download(fid);
+                window.open(UrlConfig.getBaseURI() + 'file/download?uid=' + uid + '&fid=' + fid);
             });
             $('.cell').css('max-width', '128px');
             $('.img-container').css('max-height', '130px');
@@ -428,16 +429,6 @@ define(function (require) {
             $('.pages').height(r * (display['doc'][1] + 40));
         }, 100);
     }
-
-    var download = function (fid) {
-        $('#do_').remove();
-        var download_html = '<form id="do_" style="display: none" method="post" action="' + UrlConfig.getBaseURI() + 'file/download">';
-        download_html += '<input name="uid" value="' + uid + '">';
-        download_html += '<input name="fid" value="' + fid + '">';
-        download_html += '</form>';
-        $('body').append(download_html);
-        $('#do_').submit();
-    };
 
     var add_items = function (els, page, rows, cols, callback, after) {
         if ($('#page' + page).find('.grid').html() !== "") {
@@ -464,6 +455,7 @@ define(function (require) {
             $('.wall').append('<div id="page' + k + '" class="page"><div class="grid"></div></div>');
         }
     };
+
     var debounce = function (func, threshold, execAsap) {
         var timeout;
         return function debounced() {

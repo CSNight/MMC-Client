@@ -197,7 +197,7 @@ define(function () {
                 Metro.toast.create("Invalid file selection!", null, 5000, "bg-red fg-white");
                 return;
             }
-            if (file_box[0].files.length > 10) {
+            if ((accept !== 'image' && accept !== 'doc') && file_box[0].files.length > 10) {
                 $(file_box).remove();
                 Metro.toast.create("Too many files to upload! Please select 10 below", null, 5000, "bg-red fg-white");
                 return;

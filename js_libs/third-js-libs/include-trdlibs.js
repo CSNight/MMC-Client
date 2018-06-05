@@ -127,6 +127,14 @@
                     break;
                 case "font-awesome":
                     inputCSS("font-awesome/font-awesome.min.css");
+                    break;
+                case "wave_surfer":
+                    inputScript("media/wavesurfer.min.js");
+                    inputScript("media/wavesurfer.timeline.min.js");
+                    inputScript("media/wavesurfer.spectrogram.min.js");
+                    inputScript("media/wavesurfer.regions.min.js");
+                    inputScript("media/wavesurfer.elan.min.js");
+                    break;
             }
         }
     }

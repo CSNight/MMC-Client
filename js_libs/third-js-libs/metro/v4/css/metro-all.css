@@ -11125,6 +11125,10 @@ div {
 .h-vh-100 {
   height: 100vh!important;
 }
+
+.h-vh-85 {
+    height: 85vh !important;
+}
 .h-vh-75 {
   height: 75vh!important;
 }
@@ -11133,6 +11137,10 @@ div {
 }
 .h-vh-25 {
   height: 25vh!important;
+}
+
+.h-vh-15 {
+    height: 15vh !important;
 }
 .h-vw-100 {
   height: 100vw!important;

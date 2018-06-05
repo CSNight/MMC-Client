@@ -303,7 +303,7 @@ define(function (require) {
                 var data = {
                     'uid': uid,
                     'fid': fid,
-                    'f_type': 'image'
+                    'f_type': 'audio'
                 };
                 var rest_cache = new RestQueryAjax(cache_callback);
                 rest_cache.cache_file_REST(data);
@@ -511,7 +511,7 @@ define(function (require) {
                 func.apply(obj, args);
             timeout = setTimeout(delayed, threshold || 100);
         };
-    }
+    };
 
     function getQueryString(name) {
         try {

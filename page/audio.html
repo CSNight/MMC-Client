@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Audio Player</title>
+</head>
+<body>
+
+<script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4,jquery,wave_surfer"
+        excepts="leaflet"></script>
+<script type="text/javascript" src="../js_libs/base-libs/esl.source.js"></script>
+<script src="../busi-libs/ServicesRestAjax.js"></script>
+<script src="../busi-libs/media_player/stars.js"></script>
+<link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-mirohost.min.css" rel="stylesheet">
+<div class="pos-absolute position-left h-vh-100 w-25"></div>
+<div class="pos-absolute pos-top-right h-vh-85 w-75">
+    <div class="star pos-absolute w-100 h-100">
+        <canvas id='st' style="width: 100%;height:100%"></canvas>
+    </div>
+    <div id="donut_val" data-role="donut" data-value="0"
+         data-hole=".6" data-stroke="#f5f5f5" data-fill="#9C27B0"
+         data-animate="10" class="mx-auto pos-center pos-absolute d-none"></div>
+    <div class="pos-top-center w-75">
+        <canvas id='canvas' style="width: 100%;height: 350px"></canvas>
+    </div>
+    <div id="waveform" class="mt-20"></div>
+    <div id="wave-timeline"></div>
+</div>
+<div class="pos-absolute pos-bottom-right h-vh-15 w-75">
+    <audio id="audio"
+           data-role="audio"
+           data-src=''
+           data-show-loop="true"
+           data-show-stop="true"
+           data-show-volume="true"
+           data-show-info="true"
+           class="pos-center"
+    ></audio>
+    <div class="w-100 h-auto"></div>
+</div>
+<script>
+    require.config({
+        baseUrl: '../',
+        paths: {"audio_player": "busi-libs/media_player/audio_player"}
+    });
+    require(['audio_player'], function (audio_player) {
+        audio_player.init();
+        audio_player.init_music('http://127.0.0.1:5000/trans/resource/audio/8fb4fc7d-8b5b-4690-bfca-f460a3805d40/冯提莫-佛系少女.mp3');
+    });
+</script>
+</body>
+</html>

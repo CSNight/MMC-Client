@@ -21862,8 +21862,8 @@ html.metro-touch-device .streamer .stream.focused .stream-icon {
 }
 .ani-spin,
 .ani-hover-spin:hover {
-  -webkit-animation: ani-spin 1.5s linear infinite;
-          animation: ani-spin 1.5s linear infinite;
+    -webkit-animation: ani-spin 4s linear infinite;
+    animation: ani-spin 4s linear infinite;
 }
 .ani-pulse,
 .ani-hover-pulse:hover {

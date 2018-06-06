@@ -6,8 +6,8 @@ define(function () {
     var canvas = document.getElementById('canvas');
     var _wave_surfer = window.WaveSurfer.create({
         container: '#waveform',
-        waveColor: 'violet',
-        progressColor: 'purple',
+        waveColor: 'cyan',
+        progressColor: '#ffffcc',
         splitChannels: true,
         plugins: [
             window.WaveSurfer.timeline.create({
@@ -24,10 +24,10 @@ define(function () {
     });
     var init = function () {
         set_val();
-        stares();
+        //stares();
         ctx.clearRect(0, 0, cwidth, cheight);
         $('.controls').addClass('disabled');
-        $('.controls').height(100);
+        $('.controls').height(80);
         bind_event();
     };
     var set_val = function () {

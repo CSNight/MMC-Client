@@ -86,8 +86,20 @@ function RestQueryAjax(callback) {
     this.convert_doc_REST = function (data) {
         ResultGet(data, 'trans', 'office_pdf');
     };
-    this.pkg_list_REST = function (data) {
-        ResultGet(data, 'trans', 'zip_list');
+    this.create_views_REST = function (data) {
+        ResultGet(data, 'logic', 'create_views');
+    };
+    this.get_views_REST = function (data) {
+        ResultGet(data, 'logic', 'get_views');
+    };
+    this.modify_views_REST = function (data) {
+        ResultPost(data, 'logic', 'modify_views');
+    };
+    this.cache_list_REST = function (data) {
+        ResultPost(data, 'logic', 'cache_list');
+    };
+    this.get_list_REST = function (data) {
+        ResultPost(data, 'logic', 'get_list');
     };
     // 返回函数
     RestQueryAjax.prototype = {

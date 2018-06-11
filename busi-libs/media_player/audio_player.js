@@ -24,7 +24,6 @@ define(function () {
     });
     var init = function () {
         set_val();
-        //stares();
         ctx.clearRect(0, 0, cwidth, cheight);
         $('.controls').addClass('disabled');
         $('.controls').height(80);

@@ -249,7 +249,29 @@ define(function (require) {
         $('.navview-content').append(btn_play);
         $('.play_list').click(function () {
             if (play_list.length > 0) {
+                var data = {
+                    'uid': uid
+                };
+                var create_view = new RestQueryAjax(create_view_callback);
+                create_view.create_views_REST(data);
 
+                function create_view_callback(res) {
+                    if (res.response.status === 200) {
+                        data = {
+                            'uid': uid,
+                            'm_type': 'audio',
+                            'ids': JSON.stringify(play_list)
+                        };
+                        var cache_list = new RestQueryAjax(cache_list_callback);
+                        cache_list.cache_list_REST(data);
+
+                        function cache_list_callback(res2) {
+                            if (res2.response.status === 200) {
+                                window.open('audio.html?uid=' + uid);
+                            }
+                        }
+                    }
+                }
             }
         });
 

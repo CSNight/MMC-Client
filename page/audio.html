@@ -12,6 +12,24 @@
             filter: blur(65px);
             filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=10, MakeShadow=false); /* IE6~IE9 */
         }
+
+        .play_bar {
+            -webkit-transition: all .3s;
+            -o-transition: all .3s;
+            transition: all .3s;
+            -webkit-transform-origin: top;
+            -ms-transform-origin: top;
+            transform-origin: top;
+            -webkit-transform: rotateZ(-20deg);
+            -ms-transform: rotate(-20deg);
+            transform: rotateZ(-20deg)
+        }
+
+        .playing {
+            -webkit-transform: rotateZ(0);
+            -ms-transform: rotate(0);
+            transform: rotateZ(0)
+        }
     </style>
 </head>
 <body>
@@ -27,32 +45,28 @@
     });
     require(['audio_player'], function (audio_player) {
         audio_player.init();
-        audio_player.init_music('http://127.0.0.1:5000/trans/resource/audio/8fb4fc7d-8b5b-4690-bfca-f460a3805d40/冯提莫-佛系少女.mp3');
+        audio_player.init_music('5b0ffbdbfb4bf90d1c341c41', 'UNKNOWN', 'ssss');
+        //audio_player.init_music('5b0ffbdbfb4bf90d1c341c0c', 'UNKNOWN', 'ssssss');
     });
 </script>
-<link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/sky-net.min.css" rel="stylesheet">
+<link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-alert.min.css" rel="stylesheet">
 <div class="pos-absolute position-left h-vh-100 w-25 overflow">
-    <div>
-
-    </div>
-    <div data-role="accordion" data-active-heading-class="bg-cyan fg-white" class="pr-5 pl-5">
+    <div data-role="accordion" class="p-3 fg-white">
         <div class="frame active">
+            <div class="heading"><span class="mif-play mr-20"></span>Playing Now</div>
+            <div class="content fg-white"></div>
+        </div>
+        <div class="frame">
             <div class="heading"><span class="mif-star-full mr-20"></span>Recent Play</div>
-            <div class="content">
-                <div class="p-2">Cur luba manducare? Pol, a bene ionicis tormento...</div>
-            </div>
+            <div class="content fg-white"></div>
         </div>
         <div class="frame">
             <div class="heading"><span class="mif-heart mr-20"></span>Favorite</div>
-            <div class="content">
-                <div class="p-2">Wildly open a starship. Belay, ye small wench- set sails...</div>
-            </div>
+            <div class="content fg-white"></div>
         </div>
         <div class="frame">
             <div class="heading"><span class="mif-menu mr-20"></span>Custom List</div>
-            <div class="content">
-                <div class="p-2">Bitter turkey can be made tasty by brushing with sweet...</div>
-            </div>
+            <div class="content fg-white"></div>
         </div>
     </div>
 </div>
@@ -62,11 +76,11 @@
          data-animate="10" class="mx-auto pos-center pos-absolute d-none bg-transparent"></div>
     <div class="position-top">
         <div class="float-left w-25" style="height: 350px">
-            <div class="no-overflow bg-transparent shadow-3"
+            <div class="bg-transparent shadow-3"
                  style="background:url('../images/disk.png') center no-repeat;background-size:100%;left:50px;top:100px;width: 250px;height: 250px">
                 <img class="pos-absolute pos-top-right" src="../images/bar_top.png">
-                <img class="pos-absolute pos-top-right mr-2 mt-1" src="../images/bar.png">
-                <div class="no-overflow donut ani-rotate"
+                <img class="pos-absolute pos-top-right mr-2 mt-1 play_bar" src="../images/bar.png">
+                <div class="no-overflow donut play_disk"
                      style="width: 60%;height:60%; top:20%;left: 20% ;position: absolute">
                     <img src="../images/music.jpg" class="w-100 h-100 m_thumbnail">
                 </div>

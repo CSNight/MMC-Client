@@ -66,27 +66,58 @@ define(function () {
 
         function get_views_callback(res) {
             if (res.response.status === 200) {
-
+                var views = res.response.element;
+                var recent_list = views.recent;
+                recent_list.sort(function (a, b) {
+                    return a.time > b.time ? 1 : -1;// 时间正序
+                });
+                var favorite_list = views.favorite;
+                var custom_list = views.custom;
+                for (var i = 0; i < recent_list.length; i++) {
+                    $('.p_recent').append(build_list(recent_list[i]['info'], i + 1, 'recent', recent_list[i]['time']));
+                }
+                for (var i = 0; i < favorite_list.length; i++) {
+                    $('.p_favor').append(build_list(favorite_list[i], i + 1, 'favorite', ''));
+                }
+                for (var i = 0; i < custom_list.length; i++) {
+                    $('.p_cus').append(build_list(custom_list[i], i + 1, 'custom', ''));
+                }
             }
         }
 
+        data = {
+            'uid': options.uid,
+            'm_type': 'audio'
+        };
+        var get_cache = new RestQueryAjax(get_lists_callback);
+        get_cache.get_list_REST(data);
+
+        function get_lists_callback(res) {
+            if (res.response.status === 200) {
+                var cache_list = res.response.element;
+                for (var i = 0; i < cache_list.length; i++) {
+                    $('.p_now').append(build_list(cache_list[i], i + 1, 'playing'), '');
+                }
+            }
+        }
     };
     var bind_event = function () {
-        $('.play_bar').click(function () {
-            if ($('.play_bar').hasClass('playing')) {
-                $('.play_bar').removeClass('playing');
-                options._audio.pause();
-            } else {
-                $('.play_bar').addClass('playing');
-                options._audio.play();
-            }
-        });
         _wave_surfer.on('loading', function (per) {
             $('#donut_val').data('donut').val(per);
         });
         _wave_surfer.on('ready', function () {
             $('#donut_val').addClass('d-none');
             _wave_surfer.setMute(true);
+            $('.play_bar').unbind();
+            $('.play_bar').click(function () {
+                if ($('.play_bar').hasClass('playing')) {
+                    $('.play_bar').removeClass('playing');
+                    options._audio.pause();
+                } else {
+                    $('.play_bar').addClass('playing');
+                    options._audio.play();
+                }
+            });
             $('.controls').removeClass('disabled');
         });
         $(options._audio).data('audio').options.onPlay = function () {
@@ -166,6 +197,60 @@ define(function () {
         }
         $('.m_name').html(file_name);
     };
+
+    function build_list(item, index, l_type, bz) {
+        var html = '<div class="row bg-white fg-dark mr-2 ml-2 border-1 bd-red border-bottom">';
+        html += '<div class="cell pt-2 pb-2 pr-0"><span class="mif-file-music fg-red"></span></div>';
+        var btn_list = [];
+        var list_name = item.file_name.replace('.mp3', '');
+        if (list_name.length > 10) {
+            list_name = list_name.substring(0, 10) + '...'
+        }
+        if (l_type === 'playing') {
+            html += '<div class="cell pt-2 pb-2 pr-0 pl-0"><em>' + index + '</em></div>';
+            html += '<div class="colspan-6 pt-2 pb-1 reduce-2">' + list_name + '</div>';
+            html += '<div class="colspan-4 pt-2 pb-1 bg-transparent text-center">';
+            btn_list = ['mif-play', 'mif-favorite', 'mif-folder-plus', 'mif-download', 'mif-bin'];
+            html = add_button(btn_list, item, html);
+        } else if (l_type === 'recent') {
+            html += '<div class="cell pt-2 pb-2 pr-0 pl-0"><em>' + index + '</em></div>';
+            html += '<div class="colspan-4 pt-2 pb-1 reduce-2">' + list_name + '</div>';
+            html += '<div class="colspan-2 pt-2 pb-2 pl-0 fg-gray reduce-5">' + cal_time(bz) + '</div>';
+            html += '<div class="colspan-4 pt-2 pb-1 bg-transparent text-center">';
+            btn_list = ['mif-plus', 'mif-play', 'mif-favorite', 'mif-folder-plus', 'mif-download', 'mif-bin'];
+            html = add_button(btn_list, item, html);
+        } else if (l_type === 'favorite') {
+            html += '<div class="cell pt-2 pb-2 pr-0 pl-0"><em>' + index + '</em></div>';
+            html += '<div class="cell pt-2 pb-2 pl-0"><span class="mif-favorite fg-red"></span></div>';
+            html += '<div class="colspan-5 pt-2 pb-1 reduce-2">' + list_name + '</div>';
+            html += '<div class="colspan-4 pt-2 pb-1 bg-transparent text-center">';
+            btn_list = ['mif-plus', 'mif-play', 'mif-folder-plus', 'mif-download', 'mif-bin'];
+            html = add_button(btn_list, item, html);
+        } else {
+            html += '<div class="cell pt-2 pb-2 pr-0 pl-0"><em>' + index + '</em></div>';
+            html += '<div class="colspan-6 pt-2 pb-1 reduce-2">' + list_name + '</div>';
+            html += '<div class="colspan-4 pt-2 pb-1 bg-transparent text-center">';
+            btn_list = ['mif-plus', 'mif-play', 'mif-favorite', 'mif-download', 'mif-bin'];
+            html = add_button(btn_list, item['info'], html);
+        }
+        return html;
+    }
+
+    function add_button(button_list, item, str) {
+        for (var i = 0; i < button_list.length; i++) {
+            str += '<a id="' + item.fid + '" class="no-decor fg-red mr-2" href="javascript:"><span class="' + button_list[i] + '"></span></a>';
+        }
+        str += '</div></div>';
+        return str
+    }
+
+    function cal_time(index) {
+        if (index > 8) {
+            return '';
+        }
+        var d_time = ['one day', 'two days', 'three days', 'four days', 'five days', 'six days', 'a week', 'a month', 'over a month'];
+        return d_time[index];
+    }
 
     function renderFrame() {
         var array = new Uint8Array(options._analyzer.frequencyBinCount);

@@ -115,8 +115,8 @@ define(function (require) {
             html += '<img src="' + UrlConfig.getPreviewURL() + '?uid=' + uid + '&fid=' + _f.fid + '&f_type=image">';
             html += '<div class="image-overlay"><div>Size：' + _f.file_size + 'MB</div><div class="text-center" style="word-break:break-all;word-wrap:break-word">' + _f.file_name + '</div></div>';
             html += '<div class="pos-bottom-center text-center">';
-            html += '<span class="fg-red ani-hover-flash mif-eye mr-6 preview" name="' + _f.fid + '"></span>';
-            html += '<span class="fg-red ani-hover-flash mif-download download" name="' + _f.fid + '"></span></div></div></div>';
+            html += '<span class="fg-red ani-hover-flash mif-eye mr-6 preview" data-value="' + _f.fid + '"></span>';
+            html += '<span class="fg-red ani-hover-flash mif-download download" data-value="' + _f.fid + '"></span></div></div></div>';
             return html
         }
 
@@ -124,7 +124,7 @@ define(function (require) {
             $('.preview').unbind();
             $('.download').unbind();
             $('.preview').click(function () {
-                var fid = $(this).attr('name');
+                var fid = $(this).attr('data-value');
                 if (!fid) {
                     return;
                 }
@@ -143,7 +143,7 @@ define(function (require) {
                 }
             });
             $('.download').click(function () {
-                var fid = $(this).attr('name');
+                var fid = $(this).attr('data-value');
                 if (!fid) {
                     return;
                 }

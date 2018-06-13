@@ -4406,6 +4406,7 @@
 
             player.on(Metro.events.click, ".stop", function () {
                 that.stop();
+                Utils.exec(o.onStop, [audio, player]);
             });
 
             player.on(Metro.events.click, ".mute", function () {

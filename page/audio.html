@@ -22,7 +22,8 @@
             transform-origin: top;
             -webkit-transform: rotateZ(-20deg);
             -ms-transform: rotate(-20deg);
-            transform: rotateZ(-20deg)
+            transform: rotateZ(-20deg);
+            cursor: pointer;
         }
 
         .playing {
@@ -45,7 +46,7 @@
     });
     require(['audio_player'], function (audio_player) {
         audio_player.init();
-        audio_player.init_music('5b0ffbdbfb4bf90d1c341c41', 'UNKNOWN', 'ssss');
+        //audio_player.init_music('5b0ffbdbfb4bf90d1c341c41', 'UNKNOWN', 'ssss');
         //audio_player.init_music('5b0ffbdbfb4bf90d1c341c0c', 'UNKNOWN', 'ssssss');
     });
 </script>
@@ -54,19 +55,27 @@
     <div data-role="accordion" class="p-3 fg-white">
         <div class="frame active">
             <div class="heading"><span class="mif-play mr-20"></span>Playing Now</div>
-            <div class="content fg-white"></div>
+            <div class="content">
+                <div class="grid mt-2 p_now"></div>
+            </div>
         </div>
         <div class="frame">
             <div class="heading"><span class="mif-star-full mr-20"></span>Recent Play</div>
-            <div class="content fg-white"></div>
+            <div class="content">
+                <div class="grid mt-2 p_recent"></div>
+            </div>
         </div>
         <div class="frame">
             <div class="heading"><span class="mif-heart mr-20"></span>Favorite</div>
-            <div class="content fg-white"></div>
+            <div class="content">
+                <div class="grid mt-2 p_favor"></div>
+            </div>
         </div>
         <div class="frame">
             <div class="heading"><span class="mif-menu mr-20"></span>Custom List</div>
-            <div class="content fg-white"></div>
+            <div class="content">
+                <div class="grid mt-2 p_cus"></div>
+            </div>
         </div>
     </div>
 </div>

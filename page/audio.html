@@ -46,15 +46,16 @@
     });
     require(['audio_player'], function (audio_player) {
         audio_player.init();
-        //audio_player.init_music('5b0ffbdbfb4bf90d1c341c41', 'UNKNOWN', 'ssss');
-        //audio_player.init_music('5b0ffbdbfb4bf90d1c341c0c', 'UNKNOWN', 'ssssss');
     });
 </script>
 <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-alert.min.css" rel="stylesheet">
 <div class="pos-absolute position-left h-vh-100 w-25 overflow">
     <div data-role="accordion" class="p-3 fg-white">
         <div class="frame active">
-            <div class="heading"><span class="mif-play mr-20"></span>Playing Now</div>
+            <div class="heading"><span class="mif-play mr-20"></span>Playing Now
+                <button class="button small outline float-right loop_type"><span class="mif-loop"></span></button>
+                <button class="button small outline float-right clear_list mr-2"><span class="mif-bin"></span></button>
+            </div>
             <div class="content">
                 <div class="grid mt-2 p_now"></div>
             </div>
@@ -108,13 +109,13 @@
     <audio id="audio"
            data-role="audio"
            data-src=''
-           data-show-loop="true"
+           data-show-loop="false"
            data-show-stop="true"
            data-show-volume="true"
            data-show-info="true"
            class="position-bottom bg-transparent"
     ></audio>
-    <div class="w-100 h-auto text-center fg-white mt-4"><h3 class="m_name">冯提模</h3></div>
+    <div class="w-100 h-auto text-center fg-white mt-4"><h3 class="m_name"></h3></div>
 </div>
 
 </body>

@@ -1,4 +1,5 @@
-define(function () {
+define(function (require) {
+    var m_info = require('busi-libs/media_player/music_info');
     window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
     var options = {};
     var _wave_surfer = window.WaveSurfer.create({
@@ -27,6 +28,7 @@ define(function () {
         $('.controls').addClass('disabled');
         $('.controls').height(80);
         bind_event();
+        m_info.init();
     };
 
     var set_val = function () {
@@ -114,6 +116,11 @@ define(function () {
             $('.p_now').html('');
             options.cache_list = [];
         });
+        $('.play_all').click(function () {
+            $(this).parent().siblings('.content').find('.grid').find('.row').each(function () {
+                $(this).find('.mif-plus').click();
+            });
+        });
         $('.loop_type').click(function () {
             var state = ['mif-loop', 'mif-shuffle', 'mif-infinite'];
             var cur_state = $(this).find('span').attr('class');
@@ -145,10 +152,14 @@ define(function () {
             $('.controls').removeClass('disabled');
             options._audio.play();
         });
+        _wave_surfer.on('audioprocess', function (e, w) {
+            m_info.go(e);
+        });
         $(options._audio).data('audio').options.onPlay = function () {
             if (!$('.play_bar').hasClass('playing')) {
                 $('.play_bar').addClass('playing');
             }
+            m_info.find(options._audio.currentTime);
             _wave_surfer.play();
             $('.play_disk').addClass('ani-rotate');
         };
@@ -156,6 +167,7 @@ define(function () {
             if ($('.play_bar').hasClass('playing')) {
                 $('.play_bar').removeClass('playing');
             }
+            m_info.pause();
             $('.play_disk').removeClass('ani-rotate');
             _wave_surfer.pause();
             var per = $('.stream-slider').find('.marker').find('.hint').html();
@@ -174,6 +186,7 @@ define(function () {
             if ($('.play_bar').hasClass('playing')) {
                 $('.play_bar').removeClass('playing');
             }
+            m_info.clear();
             $('.play_disk').removeClass('ani-rotate');
             _wave_surfer.stop();
             $('.p_now').find('.row').eq(get_next_play()).find('.mif-play').click();
@@ -181,16 +194,19 @@ define(function () {
         $('.stream-slider').find('.marker')[0].onmouseup = function () {
             var per = $('.stream-slider').find('.marker').find('.hint').html();
             _wave_surfer.seekTo(per / 100);
+            m_info.find(options._audio.currentTime);
         };
         $('.stream-slider').click(function () {
             var per = $('.stream-slider').find('.marker').find('.hint').html();
             _wave_surfer.seekTo(per / 100);
+            m_info.find(options._audio.currentTime);
         });
         _wave_surfer.on('play', function () {
             renderFrame();
         });
         _wave_surfer.on('seek', function (per) {
-            options._audio.currentTime = _wave_surfer.getCurrentTime()
+            options._audio.currentTime = _wave_surfer.getCurrentTime();
+            m_info.find(options._audio.currentTime);
         });
     };
 
@@ -363,6 +379,7 @@ define(function () {
         options._audio.pause();
         $('.controls').addClass('disabled');
         $('.play_bar').unbind();
+        options.ctx.clearRect(0, 0, options.cwidth, options.cheight);
         var data = {
             'uid': options.uid,
             'fid': fid,
@@ -384,6 +401,7 @@ define(function () {
             }
         }
 
+        m_info.init_song(options.uid, file_name.replace('.mp3', ''));
         if (fid_image !== 'UNKNOWN') {
             $('.m_thumbnail').attr('src', UrlConfig.getPreviewURL() + '?uid=' + options.uid + '&fid=' + fid_image + '&f_type=audio');
         } else {

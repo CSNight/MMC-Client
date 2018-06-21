@@ -31,11 +31,19 @@
             -ms-transform: rotate(0);
             transform: rotateZ(0)
         }
+
+        .now {
+            color: #e73f7c;
+        }
+
+        .pre_now {
+            color: #00fe21;
+        }
     </style>
 </head>
 <body>
 <div style="background-image: url('../images/background.jpg');z-index: -9" class="blur pos-absolute w-100 h-100"></div>
-<script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4,jquery,wave_surfer"
+<script src="../js_libs/third-js-libs/include-trdlibs.js" include="metro.v4,jquery,wave_surfer,jq-nicescroll"
         excepts="leaflet"></script>
 <script type="text/javascript" src="../js_libs/base-libs/esl.source.js"></script>
 <script src="../busi-libs/ServicesRestAjax.js"></script>
@@ -49,7 +57,7 @@
     });
 </script>
 <link id="color-scheme" href="../js_libs/third-js-libs/metro/v4/css/schemes/red-alert.min.css" rel="stylesheet">
-<div class="pos-absolute position-left h-vh-100 w-25 overflow">
+<div class="pos-absolute pos-top-left h-vh-75 w-25 overflow">
     <div data-role="accordion" class="p-3 fg-white">
         <div class="frame active">
             <div class="heading"><span class="mif-play mr-20"></span>Playing Now
@@ -61,24 +69,33 @@
             </div>
         </div>
         <div class="frame">
-            <div class="heading"><span class="mif-star-full mr-20"></span>Recent Play</div>
+            <div class="heading"><span class="mif-star-full mr-20"></span>Recent Play
+                <button class="button small outline float-right play_all"><span class="mif-list"></span></button>
+            </div>
             <div class="content">
                 <div class="grid mt-2 p_recent"></div>
             </div>
         </div>
         <div class="frame">
-            <div class="heading"><span class="mif-heart mr-20"></span>Favorite</div>
+            <div class="heading"><span class="mif-heart mr-20"></span>Favorite
+                <button class="button small outline float-right play_all"><span class="mif-list"></span></button>
+            </div>
             <div class="content">
                 <div class="grid mt-2 p_favor"></div>
             </div>
         </div>
         <div class="frame">
-            <div class="heading"><span class="mif-menu mr-20"></span>Custom List</div>
+            <div class="heading"><span class="mif-menu mr-20"></span>Custom List
+                <button class="button small outline float-right play_all"><span class="mif-list"></span></button>
+            </div>
             <div class="content">
                 <div class="grid mt-2 p_cus"></div>
             </div>
         </div>
     </div>
+</div>
+<div class="pos-absolute pos-bottom-left h-vh-25 w-25 no-overflow info">
+
 </div>
 <div class="pos-absolute pos-top-right h-vh-85 w-75">
     <div id="donut_val" data-role="donut" data-value="0"

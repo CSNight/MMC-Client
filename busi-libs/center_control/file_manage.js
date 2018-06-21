@@ -57,7 +57,7 @@ define(function () {
             $(this).toggleClass('selected');
         });
         bindEvent(sid);
-        $('.paginate_button').click(function () {
+        $('.dataTables_paginate').click(function () {
             bindEvent(sid);
         });
     };

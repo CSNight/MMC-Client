@@ -4,8 +4,7 @@
 function Config() {
     var URLset = {
         BaseURI: "http://127.0.0.1:5000/",
-        PreviewURI: "http://127.0.0.1:5000/trans/get_preview",
-        FileURI: "http://localhost:8080/ShipAssist-Services/"
+        PreviewURI: "http://127.0.0.1:5000/trans/get_preview"
     };
     this.getUrl = function (key) {
         return URLset[key];
@@ -100,6 +99,12 @@ function RestQueryAjax(callback) {
     };
     this.get_list_REST = function (data) {
         ResultPost(data, 'logic', 'get_list');
+    };
+    this.get_info_REST = function (data) {
+        ResultPost(data, 'logic', 'get_music_info');
+    };
+    this.update_info_REST = function (data) {
+        ResultPost(data, 'logic', 'update_music_info');
     };
     // 返回函数
     RestQueryAjax.prototype = {

@@ -41,10 +41,10 @@ define(function (require) {
             'capHeight': 2,
             'capStyle': '#fff',
             'capYPositionArray': [],//store the vertical position of hte caps for the previous frame
-            '_AC': new AudioContext(),
             'cur_state': 'loop',
             'cur_play': 0
         };
+        options._AC = new AudioContext();
         options.canvas.width = $('#canvas').width();
         options.canvas.height = $('#canvas').height();
         options.cwidth = options.canvas.width;
@@ -252,16 +252,20 @@ define(function (require) {
             if (list_t !== 'cache_list') {
                 logic_now_recent(fid, list_t, origin_list);
             }
+            var img_fid = '';
+            var lyric_info = '';
             for (var i = 0; i < origin_list.length; i++) {
                 if (list_t === 'recent_list') {
                     if (fid === origin_list[i]['info'].fid) {
-                        var img_fid = eval('(' + origin_list[i]['info'].description + ')').shortcut;
-                        init_music(fid, img_fid, origin_list[i]['info'].file_name);
+                        img_fid = eval('(' + origin_list[i]['info'].description + ')').shortcut;
+                        lyric_info = eval('(' + origin_list[i]['info'].description + ')').lyric;
+                        init_music(fid, img_fid, origin_list[i]['info'].file_name, lyric_info);
                     }
                 } else {
                     if (fid === origin_list[i].fid) {
-                        var img_fid = eval('(' + origin_list[i].description + ')').shortcut;
-                        init_music(fid, img_fid, origin_list[i].file_name);
+                        img_fid = eval('(' + origin_list[i].description + ')').shortcut;
+                        lyric_info = eval('(' + origin_list[i].description + ')').lyric;
+                        init_music(fid, img_fid, origin_list[i].file_name, lyric_info);
                     }
                 }
             }
@@ -375,7 +379,7 @@ define(function (require) {
         }
     };
 
-    var init_music = function (fid, fid_image, file_name) {
+    var init_music = function (fid, fid_image, file_name, lyric_info) {
         options._audio.pause();
         $('.controls').addClass('disabled');
         $('.play_bar').unbind();
@@ -401,7 +405,7 @@ define(function (require) {
             }
         }
 
-        m_info.init_song(options.uid, file_name.replace('.mp3', ''));
+        m_info.init_song(fid, options.uid, file_name.replace('.mp3', ''), lyric_info);
         if (fid_image !== 'UNKNOWN') {
             $('.m_thumbnail').attr('src', UrlConfig.getPreviewURL() + '?uid=' + options.uid + '&fid=' + fid_image + '&f_type=audio');
         } else {

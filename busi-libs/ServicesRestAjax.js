@@ -103,6 +103,9 @@ function RestQueryAjax(callback) {
     this.get_info_REST = function (data) {
         ResultPost(data, 'logic', 'get_music_info');
     };
+    this.get_audio_info_REST = function (data) {
+        ResultPost(data, 'logic', 'get_file_info');
+    };
     this.update_info_REST = function (data) {
         ResultPost(data, 'logic', 'update_music_info');
     };

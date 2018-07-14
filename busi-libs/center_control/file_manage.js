@@ -391,6 +391,7 @@ define(function () {
         if (is_global.toLowerCase() === "g") {
             result = result.replace(/\s/g, "");
         }
+        result = result.replace(/(\|)|(｜)|(\[)|(\])|(\')|(\")|(\{)|(\})/g, '');
         return result;
     }
 

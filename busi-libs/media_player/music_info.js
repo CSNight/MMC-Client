@@ -40,8 +40,10 @@ define(function () {
         function info_callback(res) {
             if (res.response.status === 200) {
                 current_infos = res.response.element;
-                $('.change_lrc').unbind();
-                $('.change_lrc').click(change_lyric);
+                $('#change_lrc').unbind();
+                $('#change_lrc').click(function () {
+                    change_lyric();
+                });
                 if ($('.lrc').html() !== '暂无歌词') {
                     return;
                 }

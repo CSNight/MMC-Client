@@ -4,6 +4,7 @@ define(function () {
     var current_index = 0;
     var current_t = null;
     var line_height = 24;
+    var current_fid = "";
     var init = function () {
         setFrameHtml();
 
@@ -15,7 +16,7 @@ define(function () {
         html += '<ul class="t-menu open horizontal compact align-right">';
         html += '<li><a class="m_title" href="javascript:" style="width: 400px;text-align: center"></a></li>';
         html += '<li><a id="change_lrc" href="javascript:"><span class="mif-featured-play-list icon"></span></a></li>';
-        html += '<li><a href="javascript:"><span class="mif-info icon"></span></a></li>';
+        html += '<li><a id="update_info" href="javascript:"><span class="mif-info icon"></span></a></li>';
         html += '</ul></div><div class="lyric h-100 mb-4 no-overflow">';
         html += '<ul class="lrc text-center fg-white" style="height: 180px;list-style-type:none" id="lrc">暂无歌词</ul></div>';
         $('.info').append(html);
@@ -29,6 +30,7 @@ define(function () {
             $('.m_title').html(song_name);
             return;
         }
+        current_fid = fid;
         get_info(fid, uid);
         var data = {
             'uid': uid,
@@ -43,6 +45,10 @@ define(function () {
                 $('#change_lrc').unbind();
                 $('#change_lrc').click(function () {
                     change_lyric();
+                });
+                $("#update_info").unbind();
+                $("#update_info").click(function () {
+                    update_info();
                 });
                 if ($('.lrc').html() !== '暂无歌词') {
                     return;
@@ -78,7 +84,7 @@ define(function () {
                 var gap = next_time - t;
                 $(next_line).addClass('pre_now');
                 current_t = setTimeout(function () {
-                    console.log('next');
+                    console.log('sss');
                     $('.lr_line').removeClass('now');
                     $(next_line).addClass('now').removeClass('pre_now');
                     if ($('.lr_line').length > 0) {
@@ -186,7 +192,32 @@ define(function () {
     };
 
     var update_info = function () {
-        var html = '';
+        var html = '<select  data-prepend="Lyric" data-role="select" class="mt-2 mb-4 lrc_select">';
+        for (var i = 0; i < current_infos.length; i++) {
+            if (current_infos[i].lyric !== 'UNKNOWN') {
+                html += "<option value='" + i + "'>" + current_infos[i].song_name + '(' + current_infos[i].song_id + ')' + "</option>";
+            }
+        }
+        html += "<input id='album' data-prepend='<a>Album:</a>' class='mb-4 fg-white' data-role=\"input\" type=\"text\" value='" + file_info['album'] + "'>";
+        html += "<input id='artist' data-prepend='<a>Artist:</a>' class='fg-white' data-role=\"input\" type=\"text\" value='" + file_info['artist'] + "'>";
+        Metro.dialog.create({
+            title: "<span class='mif-picassa mr-4'></span>Update Music Info",
+            content: html,
+            width: 500,
+            actions: [
+                {
+                    caption: "<span class='mif-checkmark'></span> OK",
+                    cls: "alert",
+                    onclick: function () {
+
+                    }
+                },
+                {
+                    caption: "<span class='mif-cross'></span> Cancel",
+                    cls: "js-dialog-close"
+                }
+            ]
+        });
     };
 
     function build_lyric(lyric_list) {
